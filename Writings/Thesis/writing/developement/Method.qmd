@@ -1,0 +1,86 @@
+---
+bibliography: references.bib
+---
+
+# Methods
+
+## Data source and recording details
+
+### International Brain Laboratory (IBL)
+
+We used the open-access dataset from the International Brain Laboratory (IBL). IBL provides a comprehensive set of recordings collected from more than 100 mice across 11 laboratories doing a standardized perceptual decision-making task. 547 Neuropixel probes were inserted in the left forebrain, midbrain, right hindbrain, and cerebellum to collect data on 267 brain regions [@benson2023].
+
+### Task detail
+
+At the start of each trial, the mouse was required to refrain from moving the wheel for a quiescence period lasting between 400 and 700 milliseconds. After this period, a visual stimulus (Gabor patch) appeared on either the left or right side of the screen, accompanied by a 100-millisecond tone (5 kHz sine wave). The contrast of the stimulus was randomly chosen from five levels (100%, 25%, 12.5%, 6%, and 0%). If the mouse correctly moved the stimulus to the center (±35° azimuth), it received a 3 µL water reward. Incorrect responses or failing to respond within 60 seconds resulted in a 500-millisecond burst of white noise and a timeout. The experiment began with 90 unbiased trials where the stimulus appeared equally on both sides. The contrast levels were presented in a ratio of \[2:2:2:2:1\] for contrasts \[100%, 25%, 12.5%, 6%, 0%\]. After this initial block, trials were organized into biased blocks, where the likelihood of the stimulus appearing on one side was fixed at 20% for the left and 80% for the right in "right blocks," or vice versa in "left blocks." These blocks consisted of 20 to 100 trials, determined by a truncated geometric distribution, with stimulus contrast levels similar to those in the unbiased block. In 0% contrast trials, where no stimulus was visible, the side assignment followed the bias of the block (e.g. right side for right blocks)[@benson2023].
+
+### Electrophysiological recording
+
+The neural recordings were conducted using Neuropixels 1.0 (3A or 3B) probes, with 384 recording channels and 960 low-impedance sites on a single shank [@benson2023]. Neuropixels probes are advanced silicon-based neural recording devices designed for high-density recording of neural activity across large populations of neurons with precise spatial and temporal resolution [@jun2017]. After the recordings, electrode tracks were reconstructed by performing serial-section 2-photon microscopy. A region was then assigned to each recording site and neuron within the Allen Common Coordinate Framework [@benson2023].
+
+## Preprocessing
+
+we first apply destriping and then downsampling to 500 Hz **destriping** -\> **decimating**-\> **annotation** -\> **epoching** define noisy channels and trials remove sessions with more than 40 % noisy channel or trials
+
+## compute current source density
+
+tf
+
+## pac
+
+## stats
+
+**Time_frequency**
+
+permutation test
+
+TF decoding
+
+## behavior analysis
+
+**task engagment**
+
+# Results
+
+A total of 63 probes were identified in the IBL datasets, with at least one channel assigned to the primary visual cortex (V1). There were seven insertions excluded due to more than 40% noisy channels, and 15 insertions excluded because of more than 40% noisy trials. In the end, 41 insertions were retained, consisting of 2,262 total channels and 25,075 trials. On average, each probe was associated with 54.83 channels in V1 (range: 2 to 118), with an average of 532.66 trials per session (range: 276 to 1,098). Among the total number of channels, 212 (9.37%) were located in layer 1, 456 (20.16%) in layer 2/3, 338 (14.94%) in layer 4, 650 (28.74%) in layer 5, and 606 (26.79%) in layer 6.
+
+![](images/Editable%20Icons%20-%20Graphs%20(2).png)
+
+## Behavioral results
+
+To have sanity check and better understanding of selected sessions, we replicated the behavioral results of IBL paper [@benson2023]. In line with previous results on whole sessions, mice performed correctly on 80.7% ± 5.8% (mean ± s.d.) of the trials, responding better and faster to trials with higher stimulus contrast. In 0% contrast trials, where mice had to rely only on their expectation and prior experience, they made correct choices in 57% ± 8% (mean ± s.d.) of the trials.
+
+![**Behavior results**: **a**) Reaction time for different contrast. **b**) performance as a percent of correct trials over total number of trials for each contrast levels](images/Untitled%20(2).png)
+
+## LFP analysis results
+
+### Inter Trial Phase Coherence (ITPC)
+
+![](images/Untitled%20(5).png)
+
+![](images/Untitled%20(6).png)
+
+![](images/paste-2.png)
+
+![](images/Untitled%20(7).png)
+
+![](images/paste-1.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Nemenyi post-hoc test p-value results for each pair of contrast levels. Lower p-values indicate significant differences between the ITC average distributions for each pair, represented by a heatmap ranging from yellow (low p-values) to black (high p-values).
+
+
+ our time frequency analysis on mice V1 revealed an increase in higher frequency band ( 25-40 Hz) with concurrent low frequency (2-7) decrease of power upon visual stimulation. Consistent with presumed FF-FB roles of these high and low frquency band power we found shorter and transient peak in high frequency with longer lasting decrease of power in low frequency. In addition, our results are another evidence for previous studies [@nestvogel2022, @senzai2019] that suggest the functional properties of theta oscillation (2.5-5HZ) in mice are analogous to primate alpha oscillations (i.e., between 7 to 15 Hz) including an anti correlation with local firing rate and decreased power upon visual stimulation. In addition we showed that the degree of increase of FF high frequency band power and decrease of FB low frequency power is modulated with contrast level of stimuli which further validate that these oscillations are stimulus dependent. however as disscussed in previous section there are still significant inter subject variability as in each subject more likely different column of V1 is targeted. in order to metigate this variability and better take advantage of IBL datasets one posible solution for further studies is to take into account the actual location of probe insertion in V1 across sessions and at least group close insersions one together.
+
+ Our findings highlighted significant inter trial phase coherence (ITC) in the low-frequency range (2-7 Hz) following stimulus onset, which is consistent with previous work on mice V1 lfp data with exact similar timing (within 500 ms after stimulus). they found also a less significant itc in high frequency (30-50 hz) with shorter time window and boader frequency range. if you see Figure Xa you can see that there is a trace of itc in broad higher frequency range with shorter time window in our result but not as pronounced as lower frequency and not found significant during permutation cluster testing. by further inspection of individual subject ITC result I found that phase coherence in high frequency were present in some subject and there were not in other and this high frequency phase coherence were not selective to layers. consequently there are two potential reason for not having consistent high frequency phase coherence across subject . either the present of high frequency in some subject of our data is solely due to noise. another possible answer could be related to fact that in our study there is more chance to have similar FB related oscillation over different recordings than having similar ff oscillation pattern over different recording. remember that in different subject the probe insertion is targeting potentially different cortical column of V1. and we know for long term [@girman1999] that different columns of V1 are specialized to process different features of visual stimuli and different part of visual field. therefore the FF signal from V1 different columns (here different subject) has more chance to varied. while the top down modulation from higher order areas through FB oscillations is shown to be more general over different columns of V1 (here as different subject) although the degree of selectivity of it is also a matter of debate.

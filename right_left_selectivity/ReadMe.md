@@ -33,4 +33,4 @@ Data can be loaded in two modes:
 **Author**: Mohammad Keshtkar\
 **Email**: mohammad.m.keshtkar\@gmail.com
 
-This repository was developed during my work at the Lyon Neuroscience Research Center (CRNL) under the supervision of Dr. Romain Ligneul. Please note that this repository is actively evolving, with certain analyses and computations still awaiting review by my supervisor.
+This repository is developed during my work at the Lyon Neuroscience Research Center (CRNL) under the supervision of Dr. Romain Ligneul. Please note that this repository is actively evolving, with certain analyses and computations still awaiting review by my supervisor.

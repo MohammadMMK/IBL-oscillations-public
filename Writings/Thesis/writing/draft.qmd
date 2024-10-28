@@ -1,0 +1,280 @@
+we searched through IBL dataset and selected sessions and probes that includes channel(s) assigned to primary visual cortex. Along side the raw LFP data we extract two other dataset for this project: trials table containing event information such as stimulus contrast and the onset/offset timing for each trial; channel's location detailing the exact location of each channel and the associated brain region.
+
+To compare the Inter-Trial Coherence (ITC) average and frequency power across different stimulus contrast levels, a series of non-parametric statistical tests were employed due to the non-normal distribution of the data. The Shapiro-Wilk test was initially used to assess the normality of the data. However, the results indicated that the data did not follow a normal distribution. Attempts to normalize the data by removing outliers (using the 95th percentile cutoff) were unsuccessful in achieving normality. Consequently, non-parametric methods were selected.
+
+Given the non-normality and the repeated measures design of the experiment, the Friedman test was utilized as an alternative to repeated measures ANOVA. The Friedman test is appropriate for comparing the ITC average and frequency power across the different conditions, as it does not assume normal distribution and is suitable for dependent samples.
+
+Following the Friedman test, which indicated significant differences among conditions, post-hoc pairwise comparisons were conducted using the Nemenyi test. The Nemenyi test is a suitable post-hoc method for the Friedman test, allowing for the identification of specific pairs of conditions that differed significantly in terms of ITC average and frequency power.
+
+This approach ensured that the statistical analysis was robust and appropriately addressed the non-normality of the data while still allowing for meaningful comparisons across the different stimulus contrast levels.
+
+Multiple Comparison for Time-Frequency ITC Estimate
+
+To identify significant clusters in the time-frequency Inter-Trial Coherence (ITC) estimates, we employed the one-sample permutation cluster test as implemented in the MNE-Python library. The use of permutation tests is particularly crucial in this context due to the multiple comparison problem inherent in time-frequency analyses, where statistical tests are conducted across many time points and frequency bands. Without proper correction, this can lead to a high rate of false positives (Maris & Oostenveld, 2007).
+
+Why Permutation Tests Are Needed
+
+The multiple comparison problem arises when numerous statistical tests are performed simultaneously, increasing the likelihood of incorrectly rejecting at least one null hypothesis (Type I error). In the context of time-frequency ITC estimates, testing for significance at each time-frequency point independently would require a large number of comparisons, leading to inflated false positive rates. Traditional methods of controlling for multiple comparisons, such as the Bonferroni correction, tend to be overly conservative, potentially reducing statistical power and increasing the likelihood of Type II errors (Nichols & Holmes, 2002).
+
+Permutation tests provide a non-parametric solution to this problem. They make no assumptions about the distribution of the data, making them particularly suitable for neurophysiological data, which often do not follow normal distributions. Instead of relying on theoretical distributions to determine significance, permutation tests use the data itself to empirically construct a null distribution. This approach allows for accurate control of the family-wise error rate (FWER) while maintaining higher sensitivity in detecting true effects (Efron & Tibshirani, 1994).
+
+How the Permutation Test Works
+
+In our analysis, we used 1000 permutations to generate the null distribution. The permutation test works by randomly shuffling the data labels and recalculating the test statistic (in this case, the t-statistic) for each permutation. This process is repeated many times (1000 in our case), and for each permutation, the maximum t-value across all time-frequency points is recorded. This set of maximum t-values forms the null distribution.
+
+The significance threshold is then defined based on this null distribution. Specifically, the threshold is set to a value that corresponds to the desired alpha level (e.g., 0.05), ensuring that the probability of observing a cluster of significant time-frequency points under the null hypothesis is appropriately controlled. By setting the threshold to None, we allowed MNE-Python to automatically compute this threshold based on the distribution of maximum t-values from the permutations, ensuring that the threshold is data-driven and adapted to the observed data distribution.
+
+Clusters of time-frequency points that exceed this threshold are considered statistically significant, indicating that the observed ITC values in these clusters are unlikely to have occurred by chance. This method not only controls for multiple comparisons but also capitalizes on the spatial and temporal structure of the data, increasing sensitivity to detect meaningful effects in the time-frequency domain (Blair & Karniski, 1993; Maris & Oostenveld, 2007).
+
+### Task detail
+
+In the IBL task (Figure 1), head-fixed mice had to move a visual stimulus to the center by turning a wheel with their front paws. At the start of each trial, the mouse was required to refrain from moving the wheel for a quiescence period lasting between 400 and 700 milliseconds. After this period, a visual stimulus (Gabor patch) appeared on either the left or right side of the screen accompanied by a 100-millisecond tone (5 kHz sine wave). If the mouse correctly moved the stimulus to the center by turning the wheel over 35°, it received a 3 µL water reward. Incorrect responses or failing to respond within 60 seconds resulted in a 500-millisecond burst of white noise and a timeout [@benson2023]. As shown in Figure 1c, mice typically responded quickly within 2 seconds. The stimulus is always presented for the first 1 second regardless of response time (RT). RT is defined as the time after stimulus when the wheel rotation exceeds the threshold.
+
+The experiment began with 90 unbiased trials where the stimulus appeared equally on both sides. The stimulus contrast levels were presented in a ratio of \[2:2:2:2:1\] for contrasts \[100%, 25%, 12.5%, 6%, 0%\]. After this initial block, trials were organized into biased blocks where the likelihood of the stimulus appearing on one side was fixed at 20% for the left and 80% for the right in "right blocks" or vice versa in "left blocks." These blocks consisted of 20 to 100 trials determined by a truncated geometric distribution with stimulus contrast levels ratio identical to those in the unbiased block. In 0% contrast trials where no stimulus was visible, the side assignment followed the block bias (e.g., right side for right blocks) [@benson2023].
+
+![**a)** Example session block diagram and IBL task. Each block of consecutive trials after 90 trials varied the probability of the stimulus being on the right side. **B)** A timeline of the main events and variables of the IBL task. After a quiescence period, stimulus appears on screen alongside a go cue tone. Mice had to bring the stimulus to the center by turning the wheel. When the wheel rotation reaches the threshold 35 ° or after 60 s of no response, positive or negative feedback is provided depending on the mice choice. (a) and (b) are extracted from [@benson2023]. **C)**  Distribution of response time (RT) with color blue and stimulus offset time with color yellow relative to stimulus onset. Note that there is always a stimulus presented for the first 1 second even though the mice typically answer sooner. ](images/Untitled%20(10).png){width="621"}
+
+### Electrophysiological recording
+
+The neural recordings were conducted using Neuropixel 1.0 <!--# I think that 3B refer to Neuropixel 2.0 --> <!--# M:I took the simple solution and removed both --> probes with 384 recording channels and 960 low-impedance sites on a single shank [@benson2023] <!--# beware, the reference software won't find your references if use use a cap letter (that's why your have ? in the rendered document) -->. Neuropixel probes are advanced silicon-based neural recording devices designed for high-density recording of neural activity across large populations of neurons with precise spatial and temporal resolution [@jun2017]. After the recordings, electrode tracks were reconstructed by performing serial-section 2-photon microscopy. A region was then assigned to each recording site (and inferred single neurons) within the Allen Common Coordinate Framework [@benson2023].
+
+## Preprocessing
+
+## Current Source Density (CSD)
+
+<!--# unless I misunderstood the results you show, you do not report CSD but unipolar effects. In this case, the CSD section is irrelevant (it is however well written and clean). -->
+
+<!--# M: yes I am making one figure, with three plots one for itc layers and two for power layers, and will add to result at end and say still not significant difference even with csd; anyway I should explain at the first of the resutl that this result is for unipolar version uless otherwise is declared -->
+
+To remove the effects of volume conduction on the LFP data and improve spatial resolution, we used Current Source Density (CSD) analysis. CSD is a technique that estimates the local current flow in the brain by calculating the second spatial derivative of the recorded potentials to reduce the influence of distant sources. First, the Euclidean distances between adjacent channels were computed using the channels' location relative to the end of the probe (axial) and their location relative to the middle of the probe (lateral). The Euclidean distance between adjacent channels $i$ and $i \pm 1$ was calculated as:
+
+$$
+d_{i,i \pm 1} = \sqrt{(x_{i \pm 1} - x_i)^2 + (y_{i \pm 1} - y_i)^2}
+$$
+
+Where $d_{i,i \pm 1}$ is the distance between channel $i$ and its adjacent channel $i+1$ (next channel) or $i-1$ (previous channel), $x_i$ and $x_{i \pm 1}$ are the axial coordinates of the channels, $y_i$ and $y_{i \pm 1}$ are the lateral coordinates.
+
+Then the second spatial derivative of the LFP signals was computed as:
+
+$$
+CSD_i = \frac{V_{i+1} - V_i}{d_{i, i+1}^2} - \frac{V_i - V_{i-1}}{d_{i, i}^2}
+$$
+
+Here $CSD_i$ represents the current source density at channel $i$, $V_i$ is the voltage at channel $i$, $V_{i+1}$ and $V_{i-1}$ are the voltages at the adjacent channels $i+1$ and $i-1$ respectively.
+
+In one-dimensional CSD analysis, it is typically assumed that channels are spaced uniformly (i.e., $d_{i i+1} = d_{i i-1}$). However, in this project, we accounted for non-uniform spacing to enhance accuracy and enable the removal of noisy channels without risking the spread of artifacts to adjacent channels. The python script for CSD computation can be found in the “CSD_computation” Jupyter notebook in the GitHub repository.
+
+## Time-Frequency analysis
+
+<!--# This part is good, but I would separate TF and ITC in different subsections. It does not matter to have subsections of different lengths. In the TF section, you can also describe how the signal is transformed for analysis (%, Db, logDb, etc.) -->
+
+For the time-frequency analysis, we chose the multitaper method. This method is known to be well-suited for situations where specific frequency bands are not preselected and the goal is a broad exploration of all frequencies. Multitaper parameters were selected in a way where frequency resolution was prioritized slightly over temporal resolution, especially at lower frequencies. In this regard, power and phase were calculated using MNE's multitaper function with the following parameters: a frequency range of 2-45 Hz with a step size of 0.5 Hz for the 2-10 Hz range and 1 Hz for frequencies above 10 Hz and a time-bandwidth product of 3.5 with the number of cycles at each frequency point set to half of the corresponding frequency ($\text{n-cycles} = \frac{f}{2}$). These parameters were found to be optimal for our specific data and goals. A detailed comparison of different parameter settings can be found in the “*tf_resolution*” Jupyter notebook in the GitHub repository.
+
+The
+
+## Inter trial Phase coherence (ITC)
+
+Inter-trial phase coherence (ITC) was computed using MNE's built-in function. ITC is a measure of the consistency of the phase of a signal across different trials at a given time and frequency. Mathematically, ITC is calculated as the magnitude of the average of normalized complex phase values across trials. For each trial, the phase of the signal, denoted as $\phi(f, t)$, is extracted at each frequency $f$ and time point $t$. These phase values are then represented as unit vectors on the complex plane, i.e., $e^{i\phi(f, t)}$.
+
+The ITC at a particular time-frequency point is then defined as:
+
+$$
+\text{ITC}(f, t) = \left| \frac{1}{N} \sum_{n=1}^{N} e^{i\phi_n(f, t)} \right|
+$$
+
+where $N$ is the number of trials, and $\phi_n(f, t)$ is the phase at frequency $f$ and time $t$ for the $n$-th trial. The resulting ITC value ranges from 0 to 1, where 0 indicates no phase consistency across trials, and 1 indicates perfect phase alignment across all trials.
+
+
+
+
+
+
+
+
+
+
+############
+
+
+---
+bibliography: references.bib
+linestretch: 1.5
+---
+
+Introduction
+
+Background
+
+How does the brain efficiently process the overwhelming amount of sensory input that it receives from a constantly changing and uncertain environment? According to the predictive coding (PC) framework, the brain's key solution is to actively predict incoming sensory input based on past observations and to prioritize the processing of unpredicted sensory information [@huang2011]. PC envisions the brain as a prediction machine, where predictions are made through prior experience or expectation. These predictions are compared to the actual sensory input, and the difference, known as prediction error, is used to refine the internal model of the environment and orient attention towards unexpected features of the input. This allows the brain to minimize the prediction error and allocate its finite resources more efficiently [@vinck2022].
+
+Predictive coding is generally thought to be implemented by the cortex. Indeed, the mammalian cortex is organized hierarchically, with lower level areas processing more basic sensory features and higher areas integrating this information into more complex representations [@felleman1991]. Visual cortex is a prime example of this hierarchy, with primary visual cortex (V1) processing simple visual features like contrast and edges, and higher visual areas(e.g. V2, V4) extracting more complex features of stimuli like texture and shape [XSX]. The hierarchy of cortical processing allows the brain to make predictions at multiple levels of abstraction and compare these predictions to the actual sensory input. according to PC the communication between hierarchical cortical areas occurs through feedforward (FF) and feedback (FB) connections. FB projections involve top-down propagation of prediction from higher to lower area while FF projections involve bottom up assembly of sensory input and prediction error from lower to higher areas to update the internal model. FF and FB connections have distinct laminar origins and targets within the cortex. FF connections mainly originate from layers 3 and 5 (of lower areas) and target the layer 4 (of higher area). while, FB connections arise from layers 2 and 6 (of higher area) and target all layers except for layer 4 (of lower area)[@vinck2022].
+
+Prominent studies in primates visual systems [@vankerkoerle2014] suggest neural oscillations might play an important role in communication between cortical regions through FF-FB connections. The studies found that FF propagation is associated with gamma-band oscillations, while FB propagation involves alpha-band (8–12 Hz) oscillations. Similarly, a study on mice [@aggarwal2022] vision revealed FF waves in the 30–50 Hz range and FB waves in the 3-6 Hz range, where the phase of the FB oscillations modulated the amplitude of the FF oscillations. However, this was the only study on mice, to the best of my knowledge, that has investigated the FF-FB waves in the visual system. Additionally, the study utilized a simple visual stimulus that did not involve any prediction and higher-level cognitive processes.
+
+Despite its limited acuity, the mouse visual system offers several advantages for studying predictive coding. The simpler and well-studied visual processing hierarchy in mice allows for more straightforward analysis of neural data. Genetic manipulation tools in mice also provide unique opportunities to explore cortical micro-circuitry and manipulate neural pathways, which is challenging in primates. Additionally, mouse studies are more cost-effective and logistically feasible compare to primates, making them an attractive model for large-scale explorations of complex brain functions like predictive coding.
+
+The International Brain Laboratory (IBL) [@benson2023] provides an extensive open-access dataset recorded from more than 100 mice trained to perform a perceptual decision-making task. In this task, mice are presented with a visual stimulus of controlled contrast and are required to move the stimulus to the center of the screen using a steering wheel. The stimulus appears on the right or left side of the screen, with a fixed probability for blocks of trials to create a predictable yet changing probability that the correct response involves a rightward or leftward movement of the wheel.  This latter feature is very interesting to study the neural implementation of predictive coding given since leveraging the block-dependent bias in trial distribution requires to constantly update a prior estimating how likely right or left stimuli are before they are even displayed.
+
+Current project
+
+Methods
+
+Data source and recording details
+
+International Brain Laboratory (IBL)
+
+We used the open-access dataset from the International Brain Laboratory (IBL). IBL provides a comprehensive set of recordings collected from more than 100 mice across 11 laboratories performing a standardized perceptual decision-making task. Data are collected from 267 brain regions by inserting 547 Neuropixel probes covering most of the left hemisphere and spanning the forebrain, midbrain and cerebellum, as well as the right hindbrain [@benson2023].
+
+Task detail
+
+In the IBL task (Figure 1), head-fixed mice had to move a visual stimulus to the center by turning a wheel with their front paws. At the start of each trial, the mouse was required to refrain from moving the wheel for a quiescence period lasting between 400 and 700 milliseconds. After this period, a visual stimulus (Gabor patch) appeared on either the left or right side of the screen accompanied by a 100-millisecond tone (5 kHz sine wave). If the mouse correctly moved the stimulus to the center by turning the wheel over 35°, it received a 3 µL water reward. Incorrect responses or failing to respond within 60 seconds resulted in a 500-millisecond burst of white noise and a timeout [@benson2023]. As shown in Figure 1c, mice typically responded quickly within 2 seconds. The stimulus is always presented for the first 1 second regardless of response time (RT). RT is defined as the time after stimulus when the wheel rotation exceeds the threshold.
+
+The experiment began with 90 unbiased trials where the stimulus appeared equally on both sides. The stimulus contrast levels were presented in a ratio of [2:2:2:2:1] for contrasts [100%, 25%, 12.5%, 6%, 0%]. After this initial block, trials were organized into biased blocks where the likelihood of the stimulus appearing on one side was fixed at 20% for the left and 80% for the right in "right blocks" or vice versa in "left blocks." These blocks consisted of 20 to 100 trials determined by a truncated geometric distribution with stimulus contrast levels ratio identical to those in the unbiased block. Thus, the transitions between these blocks are were largely unpredictable for the animals. In 0% contrast trials where no stimulus was visible, the side assignment followed the block bias (e.g., right side for right blocks) [@benson2023].
+
+a) Example session block diagram and IBL task. Each block of consecutive trials after 90 trials varied the probability of the stimulus being on the right side. B) A timeline of the main events and variables of the IBL task. After a quiescence period, stimulus appears on screen alongside a go cue tone. Mice had to bring the stimulus to the center by turning the wheel. When the wheel rotation reaches the threshold 35 ° or after 60 s of no response, positive or negative feedback is provided depending on the mice choice. (a) and (b) are extracted from <!--# DO NOT FORGET TO CITE THE REF HERE --> . C) Distribution of response time (RT) with color blue and stimulus offset time with color yellow relative to stimulus onset. Note that there is always a stimulus presented for the first 1 second even though the mice typically answer sooner. 
+
+Electrophysiological recording
+
+The neural recordings were conducted using Neuropixel probes with 384 recording channels and 960 low-impedance sites on a single shank [@benson2023]. Neuropixel probes are advanced silicon-based neural recording devices designed for high-density recording of neural activity across large populations of neurons with precise spatial and temporal resolution [@jun2017]. After the recordings, electrode tracks were reconstructed by performing serial-section 2-photon microscopy. A region was then assigned to each recording site (and inferred single neurons) within the Allen Common Coordinate Framework [@benson2023].
+
+Preprocessing of electrophysiological data
+
+Exclusion of channels and trials
+
+Local field potential (LFP) datasets alongside their corresponding behavioral data and channel locations were extracted for sessions that included at least one channel in the primary visual cortex. The destriping function of the IBL Python toolbox was applied as the first step of preprocessing to correct for the biases induced by the sequential acquisition of the raw voltage traces [@unified2024]. This was followed by downsampling from 1000 Hz to 500 Hz to decrease the size of the data files. Next, channels were excluded based on three criteria: (i) those not located the primary visual cortex, (ii) those displaying excessively high variance according to power spectral density, (iii) and those with an excessively low coherence with neighboring channels.
+
+We faced an unexpected problem with IBL LFP data due to amplifier saturation. Indeed, Neuropixel probes (especially earlier version) have a limited dynamic range that was frequently exceeded during the task (in particular, when the animal licked the spout to harvest water reward). For the analysis of spikes, this issue is less problematic as it only prevent from detecting spikes during the saturation. However, for the analysis of LFP, it introduces very salient artifacts and dramatically increase inter-trial variance in power, amplitude and phase estimates, potentially leading to erroneous conclusions. Therefore, we designed a custom exclusion procedure tailored to capture this specific problem. Trials were excluded based on the skewness of the absolute value of their first-order temporal derivative (threshold set to 1.5). Indeed, high skewness values typically reflect the presence of sudden, large amplitude changes in an otherwise mostly flat signal. By excluding these trials, our analyses focus on more consistent and representative portions of the data, improving the reliability of the results. Unless specified otherwise, all remaining trials were included in the presented analyses (i.e., missed, incorrect and slow responses).
+
+<!--# Here, I say that all trials that had an ok skewness were kept in the analysis, unless specified otherwise. If you never specify otherwise, remove the "Unless specified otherwise" part.-->
+
+Common average reference
+
+Unless otherwise specified, our electrophysiological analyses used a common average reference scheme. The common reference was recomputed as the mean of all channels of interest per animal (i.e., those located in the primary visual cortex), after excluding noisy channels). This approach was chosen to limit the influence of electrical potentials outside of visual areas as well as the influence of non-physiological noise.
+
+Current Source Density (CSD)
+
+To remove the effects of volume conduction on the LFP data and improve spatial resolution, we used Current Source Density (CSD) analysis. CSD is a technique that estimates the local current flow in the brain by calculating the second spatial derivative of the recorded potentials to reduce the influence of distant sources. First, the Euclidean distances between adjacent channels were computed using the channels' location relative to the end of the probe (axial) and their location relative to the middle of the probe (lateral). The Euclidean distance between adjacent channels $i$ and $i \pm 1$ was calculated as:
+
+$$
+d_{i,i \pm 1} = \sqrt{(x_{i \pm 1} - x_i)^2 + (y_{i \pm 1} - y_i)^2}
+$$
+
+Where $d_{i,i \pm 1}$ is the distance between channel $i$ and its adjacent channel $i+1$ (next channel) or $i-1$ (previous channel), $x_i$ and $x_{i \pm 1}$ are the axial coordinates of the channels, $y_i$ and $y_{i \pm 1}$ are the lateral coordinates.
+
+Then the second spatial derivative of the LFP signals was computed as:
+
+$$
+CSD_i = \frac{V_{i+1} - V_i}{d_{i, i+1}^2} - \frac{V_i - V_{i-1}}{d_{i, i}^2}
+$$
+
+Here $CSD_i$ represents the current source density at channel $i$, $V_i$ is the voltage at channel $i$, $V_{i+1}$ and $V_{i-1}$ are the voltages at the adjacent channels $i+1$ and $i-1$ respectively.
+
+In one-dimensional CSD analysis, it is typically assumed that channels are spaced uniformly (i.e., $d_{i i+1} = d_{i i-1}$). However, in this project, we accounted for non-uniform spacing to enhance accuracy and enable the removal of noisy channels without risking the spread of artifacts to adjacent channels. The python script for CSD computation can be found in the “CSD_computation” Jupyter notebook in the GitHub repository.
+
+Time-Frequency power analysis
+
+<!--# This part is good, but I would separate TF and ITC in different subsections. It does not matter to have subsections of different lengths. In the TF section, you can also describe how the signal is transformed for analysis (%, Db, logDb, etc.) -->
+
+For the time-frequency analysis, we chose the multitaper method. This method is known to be well-suited for situations where specific frequency bands are not preselected and the goal is a broad exploration of all frequencies. Multitaper parameters were selected in a way where frequency resolution was prioritized slightly over temporal resolution, especially at lower frequencies. In this regard, power and phase were calculated using MNE's multitaper function with the following parameters: a frequency range of 2-45 Hz with a step size of 0.5 Hz for the 2-10 Hz range and 1 Hz for frequencies above 10 Hz and a time-bandwidth product of 3.5 with the number of cycles at each frequency point set to half of the corresponding frequency ($\text{n-cycles} = \frac{f}{2}$). These parameters were found to be optimal for our specific data and goals. A detailed comparison of different parameter settings can be found in the “tf_resolution” Jupyter notebook in the GitHub repository.
+
+Baseline correction were applied to the time frequency data with baseline defined as the interval from -0.7 to -0.5 seconds relative to stimulus onset. For baseline correction, the percentage change method were used which can be expressed with the following formula:
+
+$$
+\text{Corrected Power}(t,f) = (\frac{P(t,f)-\text{Baseline}(f)}{\text{Baseline}(f)}) \times 100 
+$$
+
+Where $P(t,f)$ is the power at a specific time $(t)$ and frequency $(f)$, and $\text{Baseline}(f)$ is the averaged power within the baseline interval for each frequency.
+
+Inter trial Phase coherence (ITC)
+
+Inter-trial phase coherence (ITC) was computed using MNE's built-in function. ITC is a measure of the consistency of the phase of a signal across different trials at a given time and frequency. Mathematically, ITC is calculated as the magnitude of the average of normalized complex phase values across trials. For each trial, the phase of the signal, denoted as $\phi(f, t)$, is extracted at each frequency $f$ and time point $t$. These phase values are then represented as unit vectors on the complex plane, i.e., $e^{i\phi(f, t)}$.
+
+The ITC at a particular time-frequency point is then defined as:
+
+$$
+\text{ITC}(f, t) = \left| \frac{1}{N} \sum_{n=1}^{N} e^{i\phi_n(f, t)} \right|
+$$
+
+where $N$ is the number of trials, and $\phi_n(f, t)$ is the phase at frequency $f$ and time $t$ for the $n$-th trial. The resulting ITC value ranges from 0 to 1, where 0 indicates no phase consistency across trials, and 1 indicates perfect phase alignment across all trials.
+
+Phase-Amplitude Coupling
+
+Phase-Amplitude Coupling (PAC) quantifies the interaction between the phase and amplitude of two distinct frequency bands, typically involving the phase of a low-frequency oscillation and the amplitude of a high-frequency oscillation. In this study, PAC was computed for phase frequencies ranging from 2 to 7 Hz and amplitude frequencies from 25 to 80 Hz using the TensorPAC Python module [@combrisson2020]. The process begins with the extraction of the instantaneous phase of the low-frequency signal and the amplitude envelope of the high-frequency signal carried out through Morlet wavelets. The interaction between these signals is then evaluated to determine how the phase of slower oscillations modulates the amplitude of faster oscillations. In this project, the Gaussian Copula (GC) method was employed to compute PAC for a time window spanning 500 ms before stimulus onset to 1 second after the stimulus. Compared to other methods such as Phase Locking Value, GC is more robust to shifts in overall signal amplitude [@combrisson2020].
+
+The core of the GC method involves calculating the mutual information between normalized amplitude and phase to quantify the degree to which the phase of the low-frequency oscillation governs the amplitude of the high-frequency oscillation. This mutual information provides a lower-bound estimate of the PAC that is robust to overall amplitude shifts. Mathematically, this can be expressed as: $$
+gcPAC = I(a(t); \sin(\phi(t)), \cos(\phi(t)))
+$$
+
+Where $I$ denotes the mutual information, $a(t)$ represents the normalized amplitude signal, and $\phi(t)$ represents the normalized phase signal.
+
+After computing PAC, the values were normalized for each channel using z-score normalization, which involves subtracting the mean and dividing by the standard deviation. This process standardizes the PAC values and makes them comparable across channels and subjects. Following normalization, the values were averaged across all frequencies and for two distinct time windows: before the stimulus (-0.5 to 0 seconds) and after the stimulus (0 to 1 second).
+
+Statistical Analysis
+
+Analysis of variance (ANOVAs)
+
+<!--#  A short paragraph to say where you did ANOVAs (indicate when and why you used non parametric Friedman).  -->
+
+Cluster-based statistics
+
+<!--# A short paragraph to say when and why (the why is mostly to deal with multiple comparison when multiple tests are highly correlated in space, time and or frequency). Add another short paragraph to say what is the process (you can probably get inspiration in the doc of MNE or fieldtrip  -->
+
+multiple comparison for time frequency ITC estimate
+
+<!--# MISSING FROM THE METHODS: clear criteria to exclude channels and trials: could be a subsection of preprocessing for example  -->
+
+Results
+
+Data summary
+
+A total of 63 probes were identified in the IBL datasets, with at least one channel assigned to the primary visual cortex (V1) (see fix X a;b for one insertion example). From the initial dataset, 7 and 15 insertions were excluded due to over 40% noisy channels and trials, respectively. In the end, 41 insertions were retained, consisting of 2,262 total channels and 25,075 trials. On average, each probe was associated with 54.83 channels in V1 (range: 2 to 118), with an average of 532.66 trials per session (range: 276 to 1,098) (see fig X d <!--# beware to double-check all these references to figures before submitting your thesis. Also, be consistent between calls: If you write Figure 1a somewhere, don't write Fig. 1A elsewhere! A better way to find quickly this information that should be filled later is to use "XXX" instead of just "X" -->) . Among the total number of channels, 212 (9.37%) were in layer 1, 456 (20.16%) in layer 2/3, 338 (14.94%) in layer 4, 650 (28.74%) in layer 5, and 606 (26.79%) in layer 6 (see fig X c).
+
+Figure XXX. Region of interest and recording site locations. a) Coronal slice of the Allen Brain Atlas, highlighting the layers of the primary visual cortex (V1) with distinct colors: yellow for layer 1, light blue for layers 2/3, red for layer 4, blue for layer 5, and green for layer 6. The image base is extracted from the Allen Brain Atlas (https://atlas.internationalbrainlab.org) at an Anterior-Posterior (AP) coordinate of -3140 µm <!--# -3140 what? µm ? -->. b) Coronal slice from the Allen Brain Atlas that shows an example of a probe insertion site in a mouse brain (subject name: NYU-12). The black line represents the probe path, starting in V1 and ending in the midbrain reticular nucleus (approximately). The image is taken from the IBL online data visualization tool (https://viz.internationalbrainlab.org). c) Pie chart illustrating the proportional distribution of each V1 layer, using the same color scheme as in panel (a). d) Scatter plot showing the number of trials (range: 276-1098) and channels (range: 2-118) for the included sessions. The mean number of channels (54.83)<!--# would be good to indicate the range too: you can write (54.83; range: 40-60) for example--> is indicated by a dashed blue vertical line, and the mean number of trials (532.66) is represented by a dashed red horizontal line.
+
+Behavioral results
+
+In line with previous results on whole sessions, mice performed correctly on 80.7% ± 5.8% (mean ± s.d.) of the trials with reaction time (RT) of 1.73 ± 5.7 seconds (mean ± s.d.). RT is defined as the time interval between stimulus onset and when wheel rotation reach threshold of 35° ; and performance is computed as a percent of correct trials over total number of trials. As illustrated in (fig X a;b), Performance improved and reaction times decreased on trials with higher stimulus contrast. In 0% contrast trials, where mice had to rely only on their expectation and prior experience, they made correct choices in 57% ± 8% (mean ± s.d.).
+
+Figure XXX. Behavior results. a) illustration of reaction time for different stimulus contrast level using boxplot. b) Illustration of performance (as a percent of correct trials over total number of trials) for each contrast levels using boxplots. <!--# "illustration" does not mean much... you must say whether it is mean or median, indicate the number of animals included (N=XXX), and you must specify the meaning of error bars and boxes (SD, SEM, CI, quantiles?). -->
+
+Inter trial phase coherence (ITC)
+
+The ITC analysis indicated significant phase alignment in the low-frequency range (2-8 Hz) within the [0, 0.5] second interval following the stimulus (see Fig. X a). To ensure that these findings were not due to chance and to correct for multiple comparisons, we applied the MNE one-sample cluster permutation test (refer to the Statistical Analysis section of the Methods for more details <!--# for now it is not present. -->). The significant clusters, marked by the black line in Fig. X a <!--# I suggest you use the following format "in Figure Xy" (no space between number and panel letter + Figure unnabreviated) -->, demonstrate that the low-frequency ITC during the 0-0.5 second period was statistically meaningful, with a p-value of 0.001. Additionally, as illustrated in Fig. X c, there were no significant differences in ITC across the V1 layers in the low-frequency range.
+
+To assess whether the observed ITC levels were influenced by the stimulus, ITC average levels were compared for each level of stimulus contrast. The average ITC was computed for the low-frequency range (2-8 Hz) and within the 0-0.5 second time window post-stimulus. As illustrated in Fig. X b, an increase in stimulus contrast generally resulted in a higher mean ITC. Interestingly, the only group of trials that did not support this trend was trials without stimulus (i.e. contrast 0%), which will be discussed in the next section.
+
+To statistically evaluate whether the mean ITC was significantly affected by contrast levels, further analysis was undertaken. Given that the Shapiro-Wilk normality test did not confirm normality in the data distribution, the Friedman test, a non-parametric alternative to repeated measures ANOVA, was employed. The results of the Friedman test indicated a highly significant effect of contrast level on ITC mean, with a test statistic of 77.98 and a p-value of <!--# BEWARE: 4.66e-16 is not the usual way of reporting exponents of 10! use instead the following notation: 4.66*10^-16^ that will render well in Quarto--> 4.66*10-16, indicating that variations in ITC across different contrast levels were unlikely to have occurred by chance. Due to the significant effect of contrast level on ITC mean identified by the Friedman test, a post-hoc Nemenyi test was performed to determine which specific contrast levels contributed to the observed differences. The Nemenyi test was chosen as it is appropriate for pairwise comparisons following a Friedman test. The post-hoc analysis results are presented in fig X d, with p-values indicating the significance of differences between each pair of contrast levels.
+
+Figure XXX. Inter trial phase coherence (ITC). a) ITC average across all subjects and cortical layers relative to stimulus onset. Significant clusters (p = 0.001) are indicated by black lines, as determined by the MNE one-sample cluster permutation test.b) Comparison of ITC averages across different stimulus contrast levels using a box plot. The ITC average was computed for the 2-8 Hz frequency range within the 0-0.5 second time window post-stimulus, aggregated across all subjects and layers. c) Low-frequency ITC averages for each V1 layer relative to stimulus onset. The layer-specific averages are depicted with solid lines, and their 95% confidence intervals are shaded around the lines in distinct colors: yellow for layer 1, light blue for layers 2/3, red for layer 4, blue for layer 5, and green for layer 6. d) Nemenyi post-hoc test p-value results for each pair of contrast levels. Lower p-values indicate significant differences between the ITC average distributions for each pair, represented by a heatmap ranging from yellow (low p-values) to black (high p-values). <!--# It might be more logical to have the diagonal of the panel d in black. Or to reverse the color axis, so that darkest is closer from one. -->
+
+Time frequency analysis results
+
+Although there was substantial variability across subjects, the time-frequency analysis of V1 revealed two notable oscillations in relation to the visual stimulus: first, an increase in high-frequency power within the gamma band range (20–40 Hz), and second, a concurrent decrease in lower-frequency power within the 2–7 Hz range. The gamma increase was more transient, while the lower frequency inhibition persisted for a longer duration (see Figure X). As shown in Figure Xa,b, the observed frequency band changes exhibited a similar pattern across the different layers of V1. Statistical tests were not applied to quantitatively evaluate the layer-specificity of these effects, as the variability in the number of channels across layers and subjects did not allow for such an analysis.
+
+The averaged power of each frequency band over the first 1 second after the stimulus was compared for trials with different contrast levels. The Friedman test revealed a statistically significant effect of contrast level on power modulation in both the low-frequency band (test statistic: 20.54, p-value: 0.00039) and the gamma band (test statistic: 18.88, p-value: 0.00083), indicating that power in these bands was significantly influenced by the stimulus contrast. However, as you can see in Figure Xa,b, the frequency band average power across different contrast levels is not quite observable. Additionally, the post-hoc test results shown in Figure Xc,d indicate that the comparisons were mainly significant only in comparison to the 100% contrast condition.
+
+This not readily observable difference is believed to be mainly due to inter-subject variability, with some subjects showing significant contrast-related modulations, while others do not. In general, especially in sessions with high effects of contrast on power bands, higher contrast stimuli involved greater increases in gamma and decreases in theta band power.
+
+Average time frequency representation. Time-frequency is averaged over all channels in the primary visual cortex, computed using the multitaper method. The data is baseline-corrected using the -0.7 to -0.5 s pre-stimulus interval, with time relative to stimulus onset (marked by dashed black vertical line). Power is shown in percent units with a blue-to-warm colormap.
+
+Average frequency band power across time for all layers of V1. a) low frequency (2-7 Hz) average power for each V1 layer relative to stimulus onset (marked by dashed black vertical line). The layer-specific averages are depicted with solid lines, and their 95% confidence intervals are shaded around the lines in distinct colors: yellow for layer 1, light blue for layers 2/3, red for layer 4, blue for layer 5, and green for layer 6. b) similar to panel (a) but for higher frequency band (20-40 Hz)
+
+Affects of stimulus contrast on low and high frequency average power. a) The box plots represents the distribution of low-frequency (2-7 Hz) average power across different contrast levels.The power is averaged over the first 1 second after stimulus across all channels of each subject (N= 41). The central line in each box indicates the median power average value, while the box edges represent the inter-quartile range (IQR) and whiskers extend to 1.5 times the IQR. B) similar to panel (b) but for high frequency range (20-40 hz). C) Nemenyi post-hoc test p-value results comparing low frequency average power for pairwise contrasts levels. Lower p-values indicate significant differences between the low frequency average power distributions for each pair, represented by a heatmap ranging from yellow (low p-values) to black (high p-values). d) similar to panel (c) but for high frequency (20-40 Hz) average power
+
+Phase amplitude coupling (PAC)
+
+
+
+Discussion
+
+<!--# Structure of the discussion: 1. reformulate concisely your main result (one or two finding max) and how they relate to your hypotheses and-or objectives, in this case, you should probably emphasiwe the   / 2. restate what you would have ideally liked to see: layer specific activity in different frequency bands, effect of prior block expectation, AND why you did not observe exactly that -->
+
+References
+
+conclusion
+
+In conclusion, this project made a significant step towards leveraging the IBL dataset to explore the neural mechanisms of predictive coding in the mammalian brain. First, we showed that despite unexpected artifacts due to amplifier saturation in IBL LFP data, careful selection of preprocessing procedures make these datasets well-usable and suitable for further analysis. Second, by analyzing the phase and power of oscillations in V1, we provided new evidence supporting current hypotheses regarding high and low frequency oscillations in mice and the interplay between these waves through PAC. Further investigation, incorporating additional brain regions (such as higher-order visual areas), more complex task features (such as bias blocks), may lead to new insights and a deeper understanding of oscillations in predictive coding.
+
+
+
+The raw LFP data was then epoched from 1 second before stimulus onset to 2 seconds after, without applying baseline correction. 

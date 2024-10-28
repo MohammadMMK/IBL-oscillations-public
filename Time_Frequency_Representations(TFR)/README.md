@@ -1,6 +1,12 @@
 # **Time-Frequency Representations (TFR)**
 
-The goal of this project is to compute and visualize TFR for different task conditions across various brain regions.
+The goal of this project is to compute and visualize TFR for different task conditions across Visual processing related regions.
+
+## **Regions:**
+
+-   primary visual area (VISp) **(V1)**
+-   Anteromedial visual area (VISam) **(AM)**
+-   lateral visual area (VISl) **(LM)**
 
 ## **Conditions:**
 
@@ -20,7 +26,7 @@ The goal of this project is to compute and visualize TFR for different task cond
 
 ## **Usage:**
 
-Begin by downloading the LFP data for your sessions of interest using the data extraction project. (A future update will enable direct analysis by loading data directly from the IBL server.)
+Begin by downloading the LFP data for your sessions of interest using the [data extraction project](https://github.com/MohammadMMK/IBL_projects/tree/main/extraction/). (A future update will enable direct analysis by loading data directly from the IBL server.)
 
 Current scripts rely on parallel computation using Submitit on a server (local computation will be added soon).
 
@@ -29,4 +35,4 @@ Current scripts rely on parallel computation using Submitit on a server (local c
 -   **Author**: Mohammad Keshtkar
 -   **Email**: mohammad.m.keshtkar\@gmail.com
 
-This repository was developed during my work at the Lyon Neuroscience Research Center (CRNL) under the supervision of Dr. Romain Ligneul. Please note that this repository is actively evolving, with certain analyses and computations still awaiting review by my supervisor.
+This repository is developed during my work at the Lyon Neuroscience Research Center (CRNL) under the supervision of Dr. Romain Ligneul. Please note that this repository is actively evolving, with certain analyses and computations still awaiting review by my supervisor.

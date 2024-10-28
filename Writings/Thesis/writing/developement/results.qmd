@@ -1,0 +1,11 @@
+---
+title: "Thesis Results"
+---
+
+
+We identified 61 sessions with 63 probes, including three sessions with two probes, where at least one channel was assigned to the primary visual cortex (V1). 
+
+ We excluded 7 insertions due to having more than 40% noisy channels and 15 insertions due to noisy trials. Ultimately, we retained 41 sessions with 41 probes. The average number of channels per probe associated with any layer of V1 was 53 (range: 2 to 118), with an average of 532 trials per session (range: 276 to 1098). Of the 2262 channels, 212 (9.37%) were in layer 1, 456 (20.16%) in layer 2/3, 338 (14.94%) in layer 4, 650 (28.74%) in layer 5, and 606 (26.79%) in layers 6.
+
+
+\(\text{CSD}(i)\) represents the current source density at channel \(i\), \(V(i)\) is the voltage at channel \(i\), \(V(i+1)\) and \(V(i-1)\) are the voltages at the adjacent channels \(i+1\) and \(i-1\), respectively, \(d_{i,i+1}\) is the distance between channel \(i\) and \(i+1\), and \(d_{i-1,i}\) is the distance between channel \(i-1\) and \(i\). This formulation accounts for the varying distances between channels, ensuring an accurate computation of the CSD across the electrode array.
