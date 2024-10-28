@@ -1,0 +1,6 @@
+eid,label_VISp,label_VISl,nb_channel_VISp,nb_channel_VISl,pid1,pid2
+35ed605c-1a1a-47b1-86ff-2b56144f55af,['probe01'],['probe01'],[24],[82],['85bdeae3-269b-4e39-bd9b-2b0d95aff2fa'],['85bdeae3-269b-4e39-bd9b-2b0d95aff2fa']
+872ce8ff-9fb3-485c-be00-bc5479e0095b,['probe00'],['probe00'],[32],[64],['0a0184b3-9e1a-4c36-98f4-00ae3beb8f01'],"['625a7bc9-00cf-44f6-a508-3ed89d23ba3a', '0a0184b3-9e1a-4c36-98f4-00ae3beb8f01']"
+a405053a-eb13-4aa4-850c-5a337e5dc7fd,['probe01'],['probe01'],[18],[48],['afecbc7f-10e3-40af-b091-cca9e8df6108'],['afecbc7f-10e3-40af-b091-cca9e8df6108']
+d901aff5-2250-467a-b4a1-0cb9729df9e2,['probe01'],['probe01'],[118],[22],['12c0f3a9-518e-4dac-9651-5d95c2b4730f'],['12c0f3a9-518e-4dac-9651-5d95c2b4730f']
+fcd49e34-f07b-441c-b2ac-cb8c462ec5ac,['probe00'],['probe00'],[66],[24],['ece878b9-830d-4618-b801-ad0e7d8e7085'],['ece878b9-830d-4618-b801-ad0e7d8e7085']
