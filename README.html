@@ -20,27 +20,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="README_files/libs/clipboard/clipboard.min.js"></script>
@@ -72,11 +52,11 @@ div.csl-indent {
 </section>
 <section id="goals" class="level1">
 <h1>Goals</h1>
-<p>According to predictive coding and communication by oscillations theories, high-frequency feedforward (FF) and low-frequency feedback (FB) oscillations may contribute to the hierarchical processing of sensory stimuli by generating predictions and attaching behavioral context to the sensory world <span class="citation" data-cites="aggarwal2022">(<a href="#ref-aggarwal2022" role="doc-biblioref">Aggarwal et al. 2022</a>)</span>. Yet, the role of these oscillations in shaping perception remains poorly under stood, particularly in mice. The International Brain Laboratory (IBL) open-access datasets, with their sophisticated experimental paradigms and large-scale neural recordings, provide an unprecedented opportunity to study the principles of predictive coding in mice. In this project, we analyzed the IBL electrophysiology recordings (LFP, spikes) from the visual areas as a first step towards utilizing this dataset to understand the principles of predictive coding and communication through oscillations.</p>
+<p>According to predictive coding and communication by oscillations theories, high-frequency feedforward (FF) and low-frequency feedback (FB) oscillations may contribute to the hierarchical processing of sensory stimuli by generating predictions and attaching behavioral context to the sensory world <span class="citation" data-cites="aggarwal2022">[@aggarwal2022]</span>. Yet, the role of these oscillations in shaping perception remains poorly under stood, particularly in mice. The International Brain Laboratory (IBL) open-access datasets, with their sophisticated experimental paradigms and large-scale neural recordings, provide an unprecedented opportunity to study the principles of predictive coding in mice. In this project, we analyzed the IBL electrophysiology recordings (LFP, spikes) from the visual areas as a first step towards utilizing this dataset to understand the principles of predictive coding and communication through oscillations.</p>
 </section>
 <section id="ibl-task" class="level1">
 <h1>IBL Task</h1>
-<p>The International Brain Laboratory (IBL) <span class="citation" data-cites="benson2023">(<a href="#ref-benson2023" role="doc-biblioref">Benson et al. 2023</a>)</span> provides an extensive open-access dataset recorded from more than 100 mice trained to perform a perceptual decision-making task. In this task, mice are presented with a visual stimulus of controlled contrast and are required to move the stimulus to the center of the screen using a steering wheel. The stimulus appears on the right or left side of the screen, with a fixed probability for blocks of trials to create a predictable pattern. Yet, these bias blocks change unpredictably, requiring the mice to constantly update their predictions and internal model of the environment.</p>
+<p>The International Brain Laboratory (IBL) <span class="citation" data-cites="benson2023">[@benson2023]</span> provides an extensive open-access dataset recorded from more than 100 mice trained to perform a perceptual decision-making task. In this task, mice are presented with a visual stimulus of controlled contrast and are required to move the stimulus to the center of the screen using a steering wheel. The stimulus appears on the right or left side of the screen, with a fixed probability for blocks of trials to create a predictable pattern. Yet, these bias blocks change unpredictably, requiring the mice to constantly update their predictions and internal model of the environment.</p>
 </section>
 <section id="contents-from-latest-to-older" class="level1">
 <h1>Contents (From Latest to Older)</h1>
@@ -97,7 +77,7 @@ div.csl-indent {
 <ul>
 <li><p>Install IBL dependencies (see <a href="https://github.com/int-brain-lab/iblenv">here</a>)</p></li>
 <li><p>The majority of project is based on computing on the server and using parallel computation with Submitit module. However, such in the right_left_selectivity project, the scripts will be modified to be able to run it on both local and remote server.</p></li>
-<li><p>Other dependencies will be added soon …</p></li>
+<li><p>More detail will be added soon</p></li>
 </ul>
 </section>
 <section id="authors-and-acknowledgments" class="level1">
@@ -106,17 +86,9 @@ div.csl-indent {
 <li><strong>Author</strong>: Mohammad Keshtkar <a href="mohammad.m.keshtkar@gmail.com">mohammad.m.keshtkar@gmail.com</a></li>
 <li><strong>Supervisor</strong>: Dr.&nbsp;Romain Ligneul <a href="romain.ligneul@inserm.fr">romain.ligneul@inserm.fr</a></li>
 </ul>
-
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-aggarwal2022" class="csl-entry" role="listitem">
-Aggarwal, Adeeti, Connor Brennan, Jennifer Luo, Helen Chung, Diego Contreras, Max B. Kelz, and Alex Proekt. 2022. <span>“Visual Evoked Feedforward<span></span>feedback Traveling Waves Organize Neural Activity Across the Cortical Hierarchy in Mice.”</span> <em>Nature Communications</em> 13 (1): 4754. <a href="https://doi.org/10.1038/s41467-022-32378-x">https://doi.org/10.1038/s41467-022-32378-x</a>.
-</div>
-<div id="ref-benson2023" class="csl-entry" role="listitem">
-Benson, Brandon, Julius Benson, Daniel Birman, Niccolò Bonacchi, Matteo Carandini, Joana A Catarino, Gaelle A Chapuis, et al. 2023. <span>“A Brain-Wide Map of Neural Activity During Complex Behaviour.”</span> <em>bioRxiv</em>, January, 2023.07.04.547681. <a href="https://doi.org/10.1101/2023.07.04.547681">https://doi.org/10.1101/2023.07.04.547681</a>.
-</div>
-</div></section></div></main>
+</main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
