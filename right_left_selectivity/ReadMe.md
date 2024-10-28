@@ -19,7 +19,7 @@ This project provides tools to analyze channel and cluster selectivity in respon
 
 ### 1. Environment Setup
 
-Ensure the IBL environment is installed and activated.
+Ensure the IBL environment is installed and activated. (see [here](https://github.com/int-brain-lab/iblenv))
 
 ### 2. Data Extraction
 

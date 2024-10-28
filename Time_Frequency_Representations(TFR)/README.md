@@ -26,7 +26,7 @@ The goal of this project is to compute and visualize TFR for different task cond
 
 ## **Usage:**
 
-Begin by downloading the LFP data for your sessions of interest using the [data extraction project](https://github.com/MohammadMMK/IBL_projects/tree/main/extraction/). (A future update will enable direct analysis by loading data directly from the IBL server.)
+Begin by downloading the LFP data for your sessions of interest using the [Extraction project](../extraction/). (A future update will enable direct analysis by loading data directly from the IBL server.)
 
 Current scripts rely on parallel computation using Submitit on a server (local computation will be added soon).
 
