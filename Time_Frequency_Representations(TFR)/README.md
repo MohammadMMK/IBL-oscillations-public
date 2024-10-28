@@ -1,4 +1,4 @@
-# **Time-Frequency Representations (TFR)**
+# Acknowledgments**Time-Frequency Representations (TFR)**
 
 The goal of this project is to compute and visualize TFR for different task conditions across Visual processing related regions.
 
