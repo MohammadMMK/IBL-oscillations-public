@@ -1,0 +1,9 @@
+eid,label_VISp,label_VISpm,nb_channel_VISp,nb_channel_VISpm,pid1,pid2
+5ae68c54-2897-4d3a-8120-426150704385,['probe00'],['probe00'],[38],[22],['a8a59fc3-a658-4db4-b5e8-09f1e4df03fd'],['a8a59fc3-a658-4db4-b5e8-09f1e4df03fd']
+5c0c560e-9e1f-45e9-b66e-e4ee7855be84,"['probe01', 'probe00']","['probe01', 'probe00']","[78, 18]","[0, 50]","['d5e5311c-8beb-4f8f-b798-3e9bfa6bcdd8', '478de1ce-d7e7-4221-9365-2abdc6e88fb6']",['478de1ce-d7e7-4221-9365-2abdc6e88fb6']
+7b26ce84-07f9-43d1-957f-bc72aeb730a3,['probe00'],['probe00'],[30],[50],['f8d0ecdc-b7bd-44cc-b887-3d544e24e561'],['f8d0ecdc-b7bd-44cc-b887-3d544e24e561']
+85dc2ebd-8aaf-46b0-9284-a197aee8b16f,['probe00'],['probe00'],[54],[40],['df07180e-268e-489c-826e-40cb6f63d3a5'],['df07180e-268e-489c-826e-40cb6f63d3a5']
+bb099402-fb31-4cfd-824e-1c97530a0875,['probe00'],['probe00'],[18],[44],['b83407f8-8220-46f9-9b90-a4c9f150c572'],['b83407f8-8220-46f9-9b90-a4c9f150c572']
+caa5dddc-9290-4e27-9f5e-575ba3598614,"['probe00', 'probe01']","['probe00', 'probe01']","[92, 48]","[18, 0]","['4836a465-c691-4852-a0b1-dcd2b1ce38a1', 'd0046384-16ea-4f69-bae9-165e8d0aeacf']",['4836a465-c691-4852-a0b1-dcd2b1ce38a1']
+e535fb62-e245-4a48-b119-88ce62a6fe67,['probe00'],['probe00'],[16],[62],['c4f6665f-8be5-476b-a6e8-d81eeae9279d'],['c4f6665f-8be5-476b-a6e8-d81eeae9279d']
+f140a2ec-fd49-4814-994a-fe3476f14e66,['probe00'],['probe00'],[14],[30],['bf96f6d6-4726-4cfa-804a-bca8f9262721'],['bf96f6d6-4726-4cfa-804a-bca8f9262721']

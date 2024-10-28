@@ -1,0 +1,14 @@
+eid,label_VISl,label_VISl,nb_channel_VISl,nb_channel_VISl,pid1,pid2
+1ec23a70-b94b-4e9c-a0df-8c2151da3761,"['probe01', 'probe00']","['probe01', 'probe00']","[64, 22]","[64, 22]","['91fb4ed3-ee27-4d7e-ba5d-f61202ed9884', '54c8f5de-83d7-49b9-9b4c-67fe0f07289b']","['91fb4ed3-ee27-4d7e-ba5d-f61202ed9884', '54c8f5de-83d7-49b9-9b4c-67fe0f07289b']"
+35ed605c-1a1a-47b1-86ff-2b56144f55af,['probe01'],['probe01'],[82],[82],['85bdeae3-269b-4e39-bd9b-2b0d95aff2fa'],['85bdeae3-269b-4e39-bd9b-2b0d95aff2fa']
+3c851386-e92d-4533-8d55-89a46f0e7384,['probe00'],['probe00'],[56],[56],['c16b8e98-100f-40ce-b417-b1524c7e1270'],['c16b8e98-100f-40ce-b417-b1524c7e1270']
+5285c561-80da-4563-8694-739da92e5dd0,['probe01'],['probe01'],[42],[42],['f698f893-da01-49a1-ae4b-16f7e42e5ff5'],['f698f893-da01-49a1-ae4b-16f7e42e5ff5']
+5d6aa933-4b00-4e99-ae2d-5003657592e9,['probe01'],['probe01'],[40],[40],['61ed1a53-2f33-4a83-82ba-ec7dfa65bf60'],['61ed1a53-2f33-4a83-82ba-ec7dfa65bf60']
+69c9a415-f7fa-4208-887b-1417c1479b48,['probe01'],['probe01'],[58],[58],['72274871-80e5-4fb9-be1a-bb04acebb1de'],['72274871-80e5-4fb9-be1a-bb04acebb1de']
+6c6983ef-7383-4989-9183-32b1a300d17a,['probe00'],['probe00'],[46],[46],['c0c3c95d-43c3-4e30-9ce7-0519d0473911'],['c0c3c95d-43c3-4e30-9ce7-0519d0473911']
+872ce8ff-9fb3-485c-be00-bc5479e0095b,"['probe01', 'probe00']","['probe01', 'probe00']","[12, 64]","[12, 64]","['625a7bc9-00cf-44f6-a508-3ed89d23ba3a', '0a0184b3-9e1a-4c36-98f4-00ae3beb8f01']","['625a7bc9-00cf-44f6-a508-3ed89d23ba3a', '0a0184b3-9e1a-4c36-98f4-00ae3beb8f01']"
+8ca740c5-e7fe-430a-aa10-e74e9c3cbbe8,['probe01'],['probe01'],[20],[20],['ce0dc660-f19e-46a3-94f9-646bebae6805'],['ce0dc660-f19e-46a3-94f9-646bebae6805']
+a405053a-eb13-4aa4-850c-5a337e5dc7fd,['probe01'],['probe01'],[48],[48],['afecbc7f-10e3-40af-b091-cca9e8df6108'],['afecbc7f-10e3-40af-b091-cca9e8df6108']
+b22f694e-4a34-4142-ab9d-2556c3487086,['probe01'],['probe01'],[32],[32],['8b735d77-b77b-4243-8821-37802bf402fe'],['8b735d77-b77b-4243-8821-37802bf402fe']
+d901aff5-2250-467a-b4a1-0cb9729df9e2,['probe01'],['probe01'],[22],[22],['12c0f3a9-518e-4dac-9651-5d95c2b4730f'],['12c0f3a9-518e-4dac-9651-5d95c2b4730f']
+fcd49e34-f07b-441c-b2ac-cb8c462ec5ac,['probe00'],['probe00'],[24],[24],['ece878b9-830d-4618-b801-ad0e7d8e7085'],['ece878b9-830d-4618-b801-ad0e7d8e7085']
