@@ -15,12 +15,12 @@ The International Brain Laboratory (IBL) [(Benson et al. 2023)](https://www.bior
 The more recent sub-projects in this repository are structured with greater code organization and comprehensive documentation, reflecting improvements in coding practices and project management over time.
 
 -   [**Right-Left Selectivity Analysis**](./right_left_selectivity/)
--   [**Receptive Field Mapping**](./receptive_field_mapping/)
+-   [**Receptive Field Mapping**](./Receptive_field_mapping/)
 -   [**Time_Frequency_Representations(TFR)**](./Time_Frequency_Representations(TFR)/)
 -   [**Extraction**](./extraction/)
--   [**Decoding on Time-Frequency Representations (TFR)**](./Decoding_onTFR/)
+-   [**Decoding on Time-Frequency Representations (TFR)**](./decoding_onTFR/)
 -   [**Phase-Amplitude Coupling (PAC) Analysis**](./Phase_amplitude_coupling(PAC)/)
--   [**Behavioral Analysis**](./Behavioral_Analysis/)
+-   [**Behavioral Analysis**](./behavioral_analysis/)
 
 You can find my Master thesis, defended in September 2024, in the [Writings folder](./Writings/)
 
