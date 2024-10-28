@@ -14,7 +14,7 @@ The International Brain Laboratory (IBL) [(Benson et al. 2023)](https://www.bior
 
 The more recent sub-projects in this repository are structured with greater code organization and comprehensive documentation, reflecting improvements in coding practices and project management over time.
 
--   **Right-Left Selectivity Analysis**
+-   [**Right-Left Selectivity Analysis**](./right_left_selectivity/)
 -   **Receptive Field Mapping**
 -   **Time_Frequency_Representations(TFR)**
 -   **Extraction**
