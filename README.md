@@ -4,35 +4,35 @@ This project is dedicated to analyzing International Brain Laboratory (IBL) Elec
 
 # Goals
 
-According to predictive coding and communication by oscillations theories, high-frequency feedforward (FF) and low-frequency feedback (FB) oscillations may contribute to the hierarchical processing of sensory stimuli by generating predictions and attaching behavioral context to the sensory world [(Aggarwalet al. 2022)](https://www.nature.com/articles/s41467-022-32378-x). Yet, the role of these oscillations in shaping perception remains poorly under stood, particularly in mice. The International Brain Laboratory (IBL) open-access datasets, with their sophisticated experimental paradigms and large-scale neural recordings, provide an unprecedented opportunity to study the principles of predictive coding in mice. In this project, we analyzed the IBL electrophysiology recordings (LFP, spikes) from the visual areas as a first step towards utilizing this dataset to understand the principles of predictive coding and communication through oscillations. 
+According to predictive coding and communication by oscillations theories, high-frequency feedforward (FF) and low-frequency feedback (FB) oscillations may contribute to the hierarchical processing of sensory stimuli by generating predictions and attaching behavioral context to the sensory world [(Aggarwalet al. 2022)](https://www.nature.com/articles/s41467-022-32378-x). Yet, the role of these oscillations in shaping perception remains poorly under stood, particularly in mice. The International Brain Laboratory (IBL) open-access datasets, with their sophisticated experimental paradigms and large-scale neural recordings, provide an unprecedented opportunity to study the principles of predictive coding in mice. In this project, we analyzed the IBL electrophysiology recordings (LFP, spikes) from the visual areas as a first step towards utilizing this dataset to understand the principles of predictive coding and communication through oscillations.
 
 # IBL Task
 
 The International Brain Laboratory (IBL) [(Benson et al. 2023)](https://www.biorxiv.org/content/10.1101/2023.07.04.547681v2.abstract) provides an extensive open-access dataset recorded from more than 100 mice trained to perform a perceptual decision-making task. In this task, mice are presented with a visual stimulus of controlled contrast and are required to move the stimulus to the center of the screen using a steering wheel. The stimulus appears on the right or left side of the screen, with a fixed probability for blocks of trials to create a predictable pattern. Yet, these bias blocks change unpredictably, requiring the mice to constantly update their predictions and internal model of the environment.
 
 # Methods
-The project relies on a data processing pipeline built with Python. The key analyses include: 
 
-- Time-frequency analysis: To investigate neural oscillatory patterns over time. 
+The project relies on a data processing pipeline built with Python. The key analyses include:
 
-- Decoding Task Variables from neural data: Using machine learning techniques (such as Support Vector Classifi cation, logistic regression, area under the ROC curve, and singular value decomposition) to decode variables like expectation and left vs. right stimulus from raw LFP, time-frequency data, and spike activity data.
-  
-- Phase-Amplitude Coupling: To understand the relationship between the phase of low-frequency oscillations and the amp
-litude of higher frequencies. 
+-   Time-frequency analysis: To investigate neural oscillatory patterns over time.
 
-- Phase Analysis: To examine the role of phase coherence in neural dynamics. 
+-   Decoding Task Variables from neural data: Using machine learning techniques (such as Support Vector Classifi cation, logistic regression, area under the ROC curve, and singular value decomposition) to decode variables like expectation and left vs. right stimulus from raw LFP, time-frequency data, and spike activity data.
 
-- Receptive Field Mapping: To explore the spatial response properties of neurons 
+-   Phase-Amplitude Coupling: To understand the relationship between the phase of low-frequency oscillations and the amp litude of higher frequencies.
 
-Given the large-scale datasets, I focused on optimizing computations using cluster management tools like Submitit. 
+-   Phase Analysis: To examine the role of phase coherence in neural dynamics.
+
+-   Receptive Field Mapping: To explore the spatial response properties of neurons
+
+Given the large-scale datasets, I focused on optimizing computations using cluster management tools like Submitit.
 
 # Repository Contents (From Latest to Older)
 
--   [**decoding Multi-unit-activity**](./decoding Multi-unit-activity/)
+-   [**decoding Multi-unit-activity**](./decoding%20Multi-unit-activity/)
+-   [**Decoding on Time-Frequency Representations (TFR)**](./decoding_onTFR/)
 -   [**Receptive Field Mapping**](./Receptive_field_mapping/)
 -   [**Time_Frequency_Representations(TFR)**](./Time_Frequency_Representations(TFR)/)
 -   [**Extraction**](./extraction/)
--   [**Decoding on Time-Frequency Representations (TFR)**](./decoding_onTFR/)
 -   [**Phase-Amplitude Coupling (PAC) Analysis**](./Phase_amplitude_coupling(PAC)/)
 -   [**Behavioral Analysis**](./behavioral_analysis/)
 
