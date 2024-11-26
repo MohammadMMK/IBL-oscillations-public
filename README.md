@@ -28,7 +28,7 @@ Given the large-scale datasets, I focused on optimizing computations using clust
 
 # Repository Contents (From Latest to Older)
 
--   [**Right-Left Selectivity Analysis**](./right_left_selectivity/)
+-   [**decoding Multi-unit-activity**](./decoding Multi-unit-activity/)
 -   [**Receptive Field Mapping**](./Receptive_field_mapping/)
 -   [**Time_Frequency_Representations(TFR)**](./Time_Frequency_Representations(TFR)/)
 -   [**Extraction**](./extraction/)

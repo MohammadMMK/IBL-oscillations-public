@@ -1,1 +1,0 @@
-from .firing_rate import * 
