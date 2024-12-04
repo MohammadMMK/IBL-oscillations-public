@@ -28,7 +28,7 @@ Given the large-scale datasets, I focused on optimizing computations using clust
 
 # Repository Contents (From Latest to Older)
 
--   [**decoding Multi-unit-activity**](./decoding%20Multi-unit-activity/)
+-   [**decoding Multi-unit-activity**](./Decoding_spikes/)
 -   [**Decoding on Time-Frequency Representations (TFR)**](./decoding_onTFR/)
 -   [**Receptive Field Mapping**](./Receptive_field_mapping/)
 -   [**Time_Frequency_Representations(TFR)**](./Time_Frequency_Representations(TFR)/)
