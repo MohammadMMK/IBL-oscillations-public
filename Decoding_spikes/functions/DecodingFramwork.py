@@ -189,7 +189,6 @@ class DecodingFramework_OnCluster:
                         permuted_accuracies.append(accuracy_score(permuted_labels[test_idx], y_pred))
                     null_accuracies.append(np.mean(permuted_accuracies))
                 else: # active (test) or both (test)
-                    y_test = np.random.permutation(X_test.shape[0])
                     clf.fit(X_train, permuted_labels)
                     y_pred = clf.predict(X_test)
                     null_accuracies.append(accuracy_score(y_test, y_pred))
