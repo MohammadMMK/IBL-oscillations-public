@@ -125,3 +125,17 @@ def detect_bad_channels(raw, fs, similarity_threshold=(-0.5, 1), psd_hf_threshol
     # from ibllib.plots.figures import ephys_bad_channels
     # ephys_bad_channels(x, 30000, ichannels, xfeats)
     return ichannels, xfeats
+
+
+def define_bad_channels(epochs):
+    # Detect bad channels
+    data = epochs.get_data()
+    sfreq = epochs.info['sfreq']
+    indexes = np.arange(0, data.shape[0], 2)
+    short_data = data[indexes, :, :] # Select every other epoch
+    stacked_data = np.concatenate(short_data, axis=1)
+    channel_labels, channel_features = detect_bad_channels(stacked_data, sfreq)
+    bad_channel_index = np.where(np.logical_or(channel_labels == 1, channel_labels == 2))[0]
+    bad_channel_name = [epochs.info['ch_names'][i] for i in bad_channel_index]
+    epochs.info['bads'] = bad_channel_name
+    return epochs
