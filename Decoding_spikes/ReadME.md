@@ -6,9 +6,9 @@ In this project the aim is to classify channels in IBL data as right or left sel
 
 ## Decoding Framework
 
-the decoding procedures implemented in the `DecodingFramework_OnCluster` class, which is used to classify firing rate based on logistic regression. This class is built to facilitate the decoding of right vs. left visual stimuli from firing rates using data from both passive and active conditions. ; active means the data is recorded during the behavioral protocol while passive represent the data recorded during passive stimulation. see
+the decoding procedures implemented in the `DecodingFramework_OnCluster` class, which is used to classify firing rate based on logistic regression. This class is built to facilitate the decoding of right vs. left visual stimuli from firing rates using data from both passive and active conditions. Active means the data is recorded during the behavioral protocol while passive represent the data recorded during passive stimulation.
 
-### Key Components
+### Key steps
 
 1.  **Data Initialization** The framework accepts both passive and active firing rates for a single channel.
 
@@ -42,12 +42,17 @@ the decoding procedures implemented in the `DecodingFramework_OnCluster` class, 
     -   Apply cross-validation for test strategy `'passive'`, or train/test on different data splits for other strategies.
 4.  **Validation**: Generate null distributions and calculate p-values to verify the statistical significance of the model's performance.
 
-### Key Parameters
+### Decoding Parameters
 
--   `n_folds`: Number of folds for cross-validation.
--   `n_components`: Number of components to retain for PCA.
--   `n_permutations`: Number of permutations used for null distribution generation.
--   `test_strategy`: Determines how passive and active datasets are used for training and testing.
+-   **`test_strategy`**: Decoding procedure to use ('passive', 'active', 'both').
+    -   **passive**: Train on 80% of passive and test decoding on the 20% of passive untrained data (using k-fold).
+    -   **active**: Train on passive data and test on active data.
+    -   **both**: Train on 80% of passive data and test on 20% of passive and all active data.
+-   **`feature_selection`**: Feature selection method to use ('pca', 'average_clusters'). (average_clusters gives better results).
+-   **`n_components`**: Number of components to retain for PCA.
+-   **`n_permutations`**: Number of permutations used for null distribution generation.
+-   **`n_folds`**: Number of folds for cross-validation.
+-   **`n_time_bins`**: Number of time bins to include in the classification. If None, use all time bins.
 
 ### Results
 
@@ -59,67 +64,9 @@ The final output of the `decode` method includes:
 
 These results provide insights into the model's performance for both right and left visual stimuli, and the significance of the observed accuracies compared to random label shuffling.
 
-### Usage
+## Usage
 
-see `decoding.ipynb` Jupyter notebook for one session example with different decoding procedures. main procedure:
-
-``` python
-def Apply_decoding(eid, pid, PARAMS_preprocess, PARAMS_decoding, save = True, save_path = None):
-
-    ###########################
-    # Preprocess data
-    ###########################
-    pre_processed_data_active = pre_processed_active_data(eid, pid, **PARAMS_preprocess)
-    pre_processed_data_passive = pre_processed_passive_data(eid, pid, **PARAMS_preprocess)
-
-    FR_channels_active = pre_processed_data_active['firing_rates']
-    FR_channels_passive = pre_processed_data_passive['firing_rates']
-
-    trial_info_active = pre_processed_data_active['trial_info']
-    trial_info_passive = pre_processed_data_passive['trial_info']
-
-    channel_info = pre_processed_data_active['channel_info']
-
-
-    ###########################
-    # Decoding per channel 
-    ###########################
-    All_results = {}
-    for i, channel in enumerate(channel_info['ch_indexs'].values):
-        try:
-            print(f'processing channel {i}/{len(channel_info["ch_indexs"].values)}')
-            data_active = FR_channels_active[channel] # (n_trials, n_clusters, n_time_bins)
-            data_passive = FR_channels_passive[channel]
-            labels_active = trial_info_active['labels']
-            labels_passive = trial_info_passive['labels']
-            decoder = DecodingFramework_OnCluster(data_passive, data_active, labels_passive, labels_active, **PARAMS_decoding) 
-            All_results[channel] = decoder.decode() # include 'true_accuracy_right', 'true_accuracy_left', 'p_value_right', 'p_value_left', 'null_distribution_right', 'null_distribution_left'
-        except Exception as e:
-            print(f'error in channel {i}')
-            print(e)
-            return
-    decoding_results = pd.DataFrame(All_results)
-    decoding_results = decoding_results.T
-    decoding_results.reset_index(level=0, inplace=True)
-    # add metadata to the results
-    all_data = {'channel_info': channel_info, 'PARAMS_preprocess': PARAMS_preprocess, 'PARAMS_decoding': PARAMS_decoding, 'eid': eid, 'pid': pid, 'decoding_results': decoding_results}
-    
-    ##############
-    # Save results
-    ##############
-    if save:
-        if save_path:
-            with open(save_path, 'wb') as f:
-                pickle.dump(all_data, f)
-            return save_path
-        else:
-            current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            with open(f'results/{pid}_{current_time}.pkl', 'wb') as f:
-                pickle.dump(decoding_results, f)
-            return f'results/{pid}_{current_time}.pkl'
-    else:
-        return all_data
-```
+see `submit_decoding.ipynb` Jupyter notebook for computing right left decoding for a number of sessions.
 
 ------------------------------------------------------------------------
 
@@ -164,18 +111,17 @@ Both functions aim to extract spiking data, filter it based on specific conditio
 
 The final preprocessed data for both active and passive datasets is returned as a dictionary with the following keys: - **`firing_rates`**: Firing rate data for each channel, stored as a dictionary where each key is a channel, and values are z-scored firing rates for that channel. - **`trial_info`**: DataFrame containing trial-level metadata such as labels, contrasts, and assigned side. - **`channel_info`**: DataFrame containing channel-level metadata such as coordinates and region acronyms. - **`time_bins`**: Array representing the time bins used for calculating the firing rates.
 
-### Key Parameters
+### Preprocessing Parameters
 
 -   **`min_contrast`**: Minimum contrast value used to filter the trials.
 -   **`t_bin`**: Size of the time bin (in seconds) used for calculating firing rates.
--   **`pre_stim`** and **`post_stim`**: Time (in seconds) before and after stimulus onset to consider when calculating firing rates.
+-   **`pre_stim`** and **`post_stim`**: Time (in seconds) before and after stimulus onset to consider when calculating firing rates. ATTENTION: pre_stim window is used for z-score baseline correction of the firing rates.
+-   **`min_time`**: Minimum time (in seconds) after stimulus onset to include in the final results which goes in decoding procedures.
 -   **`filter_regions`**: List of brain regions to include in the analysis.
 -   **`only_good_clusters`**: Boolean flag indicating whether to filter clusters to include only those classified as "good".
--   **`contrast_filter`** and **`probabilityLeft_filter`**: Lists specifying valid contrast and probability left values for trial filtering.
+-   **`contrast_filter`** and **`probabilityLeft_filter`**: Lists specifying valid contrast and probability left values for trial filtering. the probabilityLeft_filter is applied only for active segment.
 
 ### Usage
-
-#### Preprocessing Data
 
 ``` python
 pre_processed_data = pre_processed_active_data(eid, pid, min_contrast=0.25, t_bin=0.02, pre_stim=0.5, post_stim=1.0)
