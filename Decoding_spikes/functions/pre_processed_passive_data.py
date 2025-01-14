@@ -2,9 +2,15 @@
 import numpy as np
 import pandas as pd
 import re
-from functions import firingRate_OnClusters, get_spikes, get_channels, get_behavior
+from .firing_rate_onCluster import firingRate_OnClusters
 from one.api import ONE
 one = ONE(base_url='https://openalyx.internationalbrainlab.org')
+
+import sys
+from pathlib import Path
+import os
+sys.path.append(str(Path(os.getcwd()).resolve().parent.parent)) # add the root of the project to the python path
+from extraction_data import get_behavior, get_spikes, get_channels
 
 def pre_processed_passive_data(eid, pid, **kwargs):
     
@@ -62,7 +68,7 @@ def pre_processed_passive_data(eid, pid, **kwargs):
     ## Filter out Bad clusters 
     if only_good_clusters:
         metrics = clusters['metrics'].reset_index(drop=True)
-        good_clusters = np.where(metrics['ks2_label'] == 'good')[0]
+        good_clusters = np.where(metrics['label'] > 0.6)[0]
 
     else:
         good_clusters= np.unique(spike_clusters)

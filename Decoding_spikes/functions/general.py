@@ -165,3 +165,66 @@ def plot_decoder_accuracies(all_accuracies_right, all_accuracies_left,
 
         plt.tight_layout()
         plt.show()
+
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+def Barplot_decoder_accuracies(all_accuracies_right, all_accuracies_left, 
+                            parameters, channel_info, 
+                            all_pvalues_right, all_pvalues_left,
+                            accuracy_threshold=None, pvalue_threshold=None,
+                            dark_background=None, title='Decoder Accuracies'):
+    """
+    Plot decoder accuracies for right and left stimuli across parameters using bar plots.
+
+    Args:
+        all_accuracies_right (ndarray): Decoder accuracies for right stimuli, shape (n_parameters, n_channels).
+        all_accuracies_left (ndarray): Decoder accuracies for left stimuli, shape (n_parameters, n_channels).
+        parameters (list or ndarray): List of parameter values corresponding to the accuracy data.
+        channel_info (dict): Dictionary containing channel information, including 'acronyms'.
+        all_pvalues_right (ndarray): P-values for right stimuli, shape (n_parameters, n_channels).
+        all_pvalues_left (ndarray): P-values for left stimuli, shape (n_parameters, n_channels).
+        accuracy_threshold (float): Minimum accuracy to include channels in the plot.
+        pvalue_threshold (float): Maximum p-value to include channels in the plot.
+        dark_background (bool): Whether to use a dark background for the plots.
+        title (str): Title for the entire figure.
+    """
+    # Ensure parameters is a list of strings
+    parameters = [str(param) for param in parameters]
+
+    # Extract channel names
+    channel_names = channel_info['acronyms']
+
+    # Apply accuracy and p-value thresholds
+    selected_channels = np.ones(all_accuracies_right.shape[1], dtype=bool)
+    if accuracy_threshold is not None:
+        selected_channels &= (all_accuracies_right.max(axis=0) >= accuracy_threshold) & (all_accuracies_left.max(axis=0) >= accuracy_threshold)
+    if pvalue_threshold is not None:
+        selected_channels &= (all_pvalues_right.min(axis=0) <= pvalue_threshold) & (all_pvalues_left.min(axis=0) <= pvalue_threshold)
+
+    # Filter data and channel names based on thresholds
+    filtered_accuracies_right = all_accuracies_right[:, selected_channels]
+    filtered_accuracies_left = all_accuracies_left[:, selected_channels]
+    filtered_channel_names = [channel_names[i] for i in np.where(selected_channels)[0]]
+
+    # Combine the data for easy plotting
+    accuracies_df = pd.DataFrame(index=filtered_channel_names)
+    for i, param in enumerate(parameters):
+        accuracies_df[f'Right {param}'] = filtered_accuracies_right[i, :]
+        accuracies_df[f'Left {param}'] = filtered_accuracies_left[i, :]
+
+    # Set dark background if requested
+    plt.style.use('dark_background' if dark_background else 'default')
+
+    # Create plot
+    ax = accuracies_df.plot(kind='bar', figsize=(12, 6), width=0.8)
+    ax.set_xlabel('Channel')
+    ax.set_ylabel('Accuracy (%)')
+    ax.set_title(title)
+    plt.xticks(rotation=45)
+    plt.legend(title='Parameters')
+    plt.grid(True, linestyle='--', alpha=0.6)
+    plt.tight_layout()
+    plt.show()

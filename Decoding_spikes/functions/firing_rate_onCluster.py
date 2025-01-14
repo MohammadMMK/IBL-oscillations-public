@@ -1,9 +1,8 @@
 import numpy as np
-from functions import get_spikes, get_channels, get_behavior
 from functions import bincount2D_cluster
 import pandas as pd
 
-def firingRate_OnClusters(stim_times,spike_times, spike_clusters, t_bin=0.1, pre_stim=0.4, post_stim=1):
+def firingRate_OnClusters(stim_times,spike_times, spike_clusters, t_bin=0.1, pre_stim=0.4, post_stim=1, z_score=True):
 
     '''
     make sure the spike data do not contain nan values
@@ -30,7 +29,9 @@ def firingRate_OnClusters(stim_times,spike_times, spike_clusters, t_bin=0.1, pre
             xlim=interval,
             yscale=all_clusters  
         )
-
+        if z_score == False:
+            z_scores.append(binned_array)
+            continue
         # Calculate baseline mean and std for Z-score calculation
         baseline_mean = np.mean(binned_array[:, :int(pre_stim / t_bin)], axis=1)
         baseline_std = np.std(binned_array[:, :int(pre_stim / t_bin)], axis=1)

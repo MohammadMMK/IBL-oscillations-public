@@ -2,7 +2,12 @@
 import numpy as np
 import pandas as pd
 import re
-from functions import firingRate_OnClusters, get_spikes, get_channels, get_behavior
+from .firing_rate_onCluster import firingRate_OnClusters
+import sys
+from pathlib import Path
+import os
+sys.path.append(str(Path(os.getcwd()).resolve().parent.parent)) # add the root of the project to the python path
+from extraction_data import get_behavior, get_spikes, get_channels
 
 
 def pre_processed_active_data(eid, pid, **kwargs):
@@ -16,6 +21,7 @@ def pre_processed_active_data(eid, pid, **kwargs):
     only_good_clusters = kwargs.get('only_good_clusters', True)
     probabilityLeft_filter = kwargs.get('probabilityLeft_filter', [0.5])
     contrast_filter = kwargs.get('contrast_stim_filter', [0, 0.25, 1])
+    z_score = kwargs.get('z_score', True)
     ######################################################
     # Extract trial information                                
     ######################################################
@@ -70,7 +76,9 @@ def pre_processed_active_data(eid, pid, **kwargs):
     ## Filter out Bad clusters 
     if only_good_clusters:
         metrics = clusters['metrics'].reset_index(drop=True)
-        good_clusters = np.where(metrics['ks2_label'] == 'good')[0]
+        print(metrics.columns)
+        # print(metrics['label'][0:50])
+        good_clusters = np.where(metrics['label'] > 0.6)[0]
 
     else:
         good_clusters= np.unique(spike_clusters)
@@ -93,7 +101,7 @@ def pre_processed_active_data(eid, pid, **kwargs):
     channels_clusters = channels_clusters[selected_clusters]
     index_channel = np.intersect1d(channels_clusters, index_channel)
 
-    z_score_firing_rate, times, clusters = firingRate_OnClusters(trial_onsets, spike_times, spike_clusters, t_bin=t_bin, pre_stim=pre_stim, post_stim=post_stim)
+    z_score_firing_rate, times, clusters = firingRate_OnClusters(trial_onsets, spike_times, spike_clusters, t_bin=t_bin, pre_stim=pre_stim, post_stim=post_stim, z_score= z_score)
 
     # z_score_firing_rate.shape = (n_trials, n_clusters, n_time_bins) | times.shape = (n_time_bins,) in milliseconds | clusters.shape = (n_clusters,)
     # Filter time indices to include only those after time 0

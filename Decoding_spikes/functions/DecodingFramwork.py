@@ -4,6 +4,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import numpy as np
 from collections import Counter
+from sklearn.preprocessing import StandardScaler
+
 
 
 class DecodingFramework_OnCluster:
@@ -168,8 +170,8 @@ class DecodingFramework_OnCluster:
             true_accuracy_right = compute_accuracy(X_train = X_train_right,  y_train =y_train_right,X_test=  X_combined_right, y_test= y_combined_right)
             true_accuracy_left = compute_accuracy(X_train = X_train_left,  y_train = y_train_left,X_test= X_combined_left, y_test= y_combined_left)
 
-        results['true_accuracy_right'] = true_accuracy_right
-        results['true_accuracy_left'] = true_accuracy_left
+        results['true_accuracy_c1'] = true_accuracy_right
+        results['true_accuracy_c2'] = true_accuracy_left
 
         #############################
         ## step 4: compute null distribution and p-value (validation)
@@ -189,7 +191,7 @@ class DecodingFramework_OnCluster:
                         permuted_accuracies.append(accuracy_score(permuted_labels[test_idx], y_pred))
                     null_accuracies.append(np.mean(permuted_accuracies))
                 else: # active (test) or both (test)
-                    y_test = np.random.permutation(X_test.shape[0])
+                    
                     clf.fit(X_train, permuted_labels)
                     y_pred = clf.predict(X_test)
                     null_accuracies.append(accuracy_score(y_test, y_pred))
@@ -210,10 +212,168 @@ class DecodingFramework_OnCluster:
         # Calculate p-values based on null distributions
         p_value_right = (np.sum(null_accuracies_right >= true_accuracy_right) + 1) / (len(null_accuracies_right) + 1)
         p_value_left = (np.sum(null_accuracies_left >= true_accuracy_left) + 1) / (len(null_accuracies_left) + 1)
-        results['p_value_right'] = p_value_right
-        results['p_value_left'] = p_value_left
-        results['null_distribution_right'] = null_accuracies_right
-        results['null_distribution_left'] = null_accuracies_left
+        results['p_value_c1'] = p_value_right
+        results['p_value_c2'] = p_value_left
+        results['null_distribution_c1'] = null_accuracies_right
+        results['null_distribution_c2'] = null_accuracies_left
+
+        return results # include 'true_accuracy_right', 'true_accuracy_left', 'p_value_right', 'p_value_left', 'null_distribution_right', 'null_distribution_left'
+
+
+
+
+class DecodingFramework_OnCluster_onlyActive:
+    def __init__(self, data, labels, distanceTOchange = None,  **kwargs):
+
+        # get parameters
+ 
+        n_time_bins = kwargs.get('n_time_bins', None)
+        self.data = data [:, :, :n_time_bins] if n_time_bins else data
+        self.labels = labels
+        self.test_strategy = kwargs.get('test_strategy', 'both')
+        self.n_components = kwargs.get('n_components', 5)
+        self.feature_selection = kwargs.get('feature_selection', 'pca')
+        self.n_folds =  kwargs.get('n_folds', 5)
+        self.n_permutations = kwargs.get('n_permutations', 1000)
+        self.condition = kwargs.get('condition', 'right_left')
+        self.distanceTOchange = distanceTOchange
+        self.distance_threshold = kwargs.get('distance_threshold', 10)
+
+    def apply_feature_selection(self, X):
+        """Apply feature selection based on the specified method."""
+        if self.feature_selection == "pca":
+            # Concatenate cluster and time bins
+            n_trials, n_clusters, n_time_bins = X.shape
+            X = X.reshape(n_trials, -1)  # Shape: (n_trials, n_clusters * n_time_bins)
+            # Apply PCA
+            pca = PCA(n_components=self.n_components)
+            X_reduced = pca.fit_transform(X)
+            return X_reduced, pca
+        elif self.feature_selection == "average_clusters":
+            # Average over clusters
+            X_reduced = np.mean(X, axis=1)  # Shape: (n_trials, n_time_bins)
+            return X_reduced, None
+        else:
+            raise ValueError(f"Unsupported feature selection method: {self.feature_selection}")
+
+    def decode(self, **kwargs):
+
+        # get parameters
+        n_permutations = kwargs.get('n_permutations', 1000)
+
+        clf = LogisticRegression(penalty='l1', solver='liblinear', max_iter=1000, class_weight='balanced')
+        results = {}
+
+        #############################
+        ## step 1: prepare data 
+        ##############################
+
+        if self.condition == 'right_left':     # decode right vs left c1 = right, c2 = left
+            # C1: first condition Mask trials for right (1) vs no stimulus (0) 
+            mask_c1 = (self.labels == 1) | (self.labels == 0)
+            # C2: second condition Mask trials for left (-1) vs no stimulus (0)
+            mask_c2 = (self.labels == -1) | (self.labels == 0)
+
+        elif self.condition == 'Blocks':       # decode blocks      0 = 0.5 prob left, 1 = 0.2 prob left, 2 = 0.8 prob left
+            mask_c1 = [i for i,x in enumerate(self.labels) if x in [0, 1] and self.distanceTOchange[i] >self.distance_threshold] # block right vs no blocks
+            mask_c2 = [i for i,x in enumerate(self.labels) if x in [0, 2] and self.distanceTOchange[i] >self.distance_threshold] # block left vs no blocks
+
+
+        X_c1 = self.data[mask_c1, :, :]
+        y_c1 = self.labels[mask_c1]
+        X_c2 = self.data[mask_c2, :, :]
+        y_c2 = self.labels[mask_c2]
+
+  
+        #############################
+        ## step 2: apply feature selection
+        ##############################
+        # Apply feature selection to the masked data
+        X_reduced_c1, _ = self.apply_feature_selection(X_c1)
+        X_reduced_c2, _ = self.apply_feature_selection(X_c2)
+
+        #############################
+        ## step 3: compute true accuracy
+        ##############################
+
+        def compute_accuracy(X_train, y_train,  skf):
+            accuracies = []
+            X_train = np.array(X_train)
+            y_train = np.array(y_train)
+     
+            for train_idx, test_idx in skf.split(X_train, y_train):
+
+                X_train_fold, X_test_fold = X_train[train_idx], X_train[test_idx]
+                y_train_fold, y_test_fold = y_train[train_idx], y_train[test_idx]
+
+                # Apply scaling
+                scaler = StandardScaler()
+                X_train_fold = scaler.fit_transform(X_train_fold)
+                X_test_fold = scaler.transform(X_test_fold)
+
+
+                # Fit the model and predict
+                clf.fit(X_train_fold, y_train_fold)
+                y_pred = clf.predict(X_test_fold)
+                
+                # Compute accuracy
+                accuracies.append(accuracy_score(y_test_fold, y_pred))
+
+            return np.mean(accuracies)
+
+        skf = StratifiedKFold(n_splits= self.n_folds, shuffle=True, random_state=42)
+        true_accuracy_c1 = compute_accuracy(X_train = X_reduced_c1, y_train = y_c1, skf = skf)
+        true_accuracy_c2 = compute_accuracy(X_train =X_reduced_c2,y_train = y_c2, skf = skf)
+
+        results['true_accuracy_c1'] = true_accuracy_c1
+        results['true_accuracy_c2'] = true_accuracy_c2
+
+        #############################
+        ## step 4: compute null distribution and p-value (validation)
+        ##############################
+        
+        def compute_null_distribution(X_train, y_train, skf):
+            X_train = np.array(X_train)
+            null_accuracies = []
+            
+            for _ in range(n_permutations):
+                # Permute the labels
+                permuted_labels = np.random.permutation(y_train)
+                permuted_accuracies = []
+                
+                for train_idx, test_idx in skf.split(X_train, permuted_labels):
+                    # Split the data
+                    X_train_fold, X_test_fold = X_train[train_idx], X_train[test_idx]
+                    permuted_train_labels = permuted_labels[train_idx]
+                    permuted_test_labels = permuted_labels[test_idx]
+                    
+                    # Apply scaling
+                    scaler = StandardScaler()
+                    X_train_fold = scaler.fit_transform(X_train_fold)
+                    X_test_fold = scaler.transform(X_test_fold)
+                    
+                    # Fit the model and predict
+                    clf.fit(X_train_fold, permuted_train_labels)
+                    y_pred = clf.predict(X_test_fold)
+                    
+                    # Compute accuracy
+                    permuted_accuracies.append(accuracy_score(permuted_test_labels, y_pred))
+                
+                # Store the mean accuracy for this permutation
+                null_accuracies.append(np.mean(permuted_accuracies))
+            
+            return np.array(null_accuracies)
+
+        null_accuracies_c1 = compute_null_distribution( X_reduced_c1, y_c1,  skf = skf)
+        null_accuracies_c2 = compute_null_distribution( X_reduced_c2, y_c2 , skf = skf)
+
+        # Calculate p-values based on null distributions
+        p_value_c1 = (np.sum(null_accuracies_c1 >= true_accuracy_c1) + 1) / (len(null_accuracies_c1) + 1)
+        p_value_c2 = (np.sum(null_accuracies_c2 >= true_accuracy_c2) + 1) / (len(null_accuracies_c2) + 1)
+        results['p_value_c1'] = p_value_c1
+        results['p_value_c2'] = p_value_c2
+        results['null_distribution_c1'] = null_accuracies_c1
+        results['null_distribution_c2'] = null_accuracies_c2
 
         return results # include 'true_accuracy_right', 'true_accuracy_left', 'p_value_right', 'p_value_left', 'null_distribution_right', 'null_distribution_left'
 
