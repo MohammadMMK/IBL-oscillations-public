@@ -5,7 +5,6 @@ from pathlib import Path
 import sys
 sys.path.append(str(Path(os.getcwd()).resolve().parent.parent)) # add the root of the project to the python path
 from extraction_data import get_epoch_StimOn, get_behavior, get_channels, numpyToMNE
-from config import paths
 import numpy as np
 import mne
 from .csd import CSD_epoch

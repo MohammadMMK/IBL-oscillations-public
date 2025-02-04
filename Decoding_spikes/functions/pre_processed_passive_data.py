@@ -9,9 +9,8 @@ one = ONE(base_url='https://openalyx.internationalbrainlab.org')
 import sys
 from pathlib import Path
 import os
-sys.path.append(str(Path(os.getcwd()).resolve().parent.parent)) # add the root of the project to the python path
-from extraction_data import get_behavior, get_spikes, get_channels
 
+from extraction_data import get_behavior, get_spikes, get_channels
 def pre_processed_passive_data(eid, pid, **kwargs):
     
     min_contrast = kwargs.get('min_contrast', 0.25)

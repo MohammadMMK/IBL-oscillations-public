@@ -34,7 +34,7 @@ def load_decoding_results(pid_eid_pairs, suffix , dir = '/mnt/data/AdaptiveContr
                 results["acronyms"].append(channel_info['acronyms'])
         else:
             j+=1
-    print(f"Number of missing pids: {j}")
+    print(f"Number of pids without decoding result: {j}")
     results = pd.DataFrame(results)
 
     # flatten results

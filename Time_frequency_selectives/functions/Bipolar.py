@@ -22,7 +22,7 @@ def bipolar_epoch(epochs_mne):
     bipolar_signals = np.diff(epochs_full, axis=1)
     
     # Create a new MNE Epochs object with the bipolar signals
-    info = mne.create_info(ch_names=new_ch_names, sfreq=epochs_mne.info['sfreq'], ch_types='eeg')
+    info = mne.create_info(ch_names=new_ch_names, sfreq=epochs_mne.info['sfreq'], ch_types='seeg')
     bipolar_epochs = mne.EpochsArray(bipolar_signals, info, events=epochs_mne.events, tmin=epochs_mne.tmin)
     
     return bipolar_epochs

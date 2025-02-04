@@ -1,0 +1,4 @@
+submitit INFO (2025-01-29 20:09:56,463) - Starting with JobEnvironment(job_id=8272, hostname=LAPTOP-DQ5BP9NP, local_rank=0(1), node=0(1), global_rank=0(1))
+submitit INFO (2025-01-29 20:09:56,463) - Loading pickle: c:\Users\gmoha\Downloads\git\ibl-oscillations\_analyses\Time_frequency_selectives\plots\logs\8272_submitted.pkl
+Connected to https://openalyx.internationalbrainlab.org as user "intbrainlab"
+submitit ERROR (2025-01-29 20:10:01,864) - Submitted job triggered an exception

@@ -6,9 +6,8 @@ from .firing_rate_onCluster import firingRate_OnClusters
 import sys
 from pathlib import Path
 import os
-sys.path.append(str(Path(os.getcwd()).resolve().parent.parent)) # add the root of the project to the python path
-from extraction_data import get_behavior, get_spikes, get_channels
 
+from extraction_data import get_behavior, get_spikes, get_channels
 
 def pre_processed_active_data(eid, pid, **kwargs):
     

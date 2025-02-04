@@ -4,3 +4,4 @@ from .get_data import *
 from .get_info_table import *
 from .epoching import *
 from .csd import *
+from .filter_trials import *

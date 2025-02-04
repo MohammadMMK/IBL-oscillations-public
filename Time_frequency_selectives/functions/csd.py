@@ -13,6 +13,7 @@ def CSD_epoch(epochs_mne, channels):
     # Compute the CSD
     csd = (v_diff2 / ch_dist_mat_expanded[:, 1:, :]) - (v_diff1 / ch_dist_mat_expanded[:, :-1, :])
     padded_epochs = np.pad(csd, ((0, 0), (1, 1), (0, 0)), mode='constant', constant_values=0)
-    epochs_mne._data = padded_epochs
-    return epochs_mne
+    new_epoch = epochs_mne.copy()
+    new_epoch._data = padded_epochs
+    return new_epoch
 
