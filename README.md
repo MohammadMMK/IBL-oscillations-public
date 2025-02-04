@@ -23,37 +23,6 @@ The International Brain Laboratory (IBL) [(Benson et al. 2023)](https://www.bio
     ```
 4.  **Install the project as a module locally**
 
-    Ensure you are at the root of the repository and run:
-
-    ``` bash
-    pip install --requirement requirements.txt
-    ```
-
-4.  **Download LFP data**\
-    Use the [`get_LFP_data.ipynb`](_analyses/extraction_data/get_LFP_data.ipynb) notebook in the [`extraction_data`](_analyses/extraction_data) module to download and save LFP data for your sessions of interest.
-
-    -   The path to the LFP data is configured in [`config.py`](_analyses/config.py) and depends on your operating system.
-
-    -   Refer to the corresponding [`ReadMe.md`](_analyses/extraction_data/ReadMe.md) file for detailed instructions.
-
-5.  **Identify selective channels**\
-    Use the [`submit_decoding.ipynb`](_analyses/Decoding_spikes/submit_decoding.ipynb) notebook in the [`Decoding_spikes`](_analyses/Decoding_spikes) module to find right/left selective channels.
-
-6.  **Compute time-frequency representations (TFRs)**\
-    Use the [`submit_TFR_computation.ipynb`](_analyses/Time_frequency_selectives/submit_TFR_computation.ipynb) notebook in the [`Time_frequency_selectives`](_analyses/Time_frequency_selectives) module to compute TFRs for different conditions (e.g., comparing TFRs for left stimulus presentations with different probabilities on left-selective electrodes).
-
-## Quarto
-
-Refer to the [documentation](https://cophyteam.github.io/project-template/about.html) of the Cophy project template to use Quarto. For convenience, the conda environments for Quarto are provided as .ylm files in \_functions/envs.
-
-# Notes
-
--   The paths to the saved LFP datasets and the IBL cache are defined in the [`config.py`](_analyses/config.py) file and are OS-dependent.
-
--   To prevent duplicate files, ensure that if you update the save path on the server, you also relocate any existing files.
-
--   A lot of old codes that were not usable anymore have removed from the git repository to avoid confusion. However, the ones that we will need in future will be refine and uploaded soon.
-
     a- In the terminal, make sure you have activate the iblenv
     ``` bash
     conda activate iblenv
