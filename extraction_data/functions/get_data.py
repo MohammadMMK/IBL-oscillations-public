@@ -7,7 +7,7 @@ from .filter_trials import filter_trials
 import sys
 
 # One-time setup for ONE with cache mode set to 'remote'
-ONE.setup(base_url='https://openalyx.internationalbrainlab.org',  silent=True)
+one = ONE(base_url='https://openalyx.internationalbrainlab.org', cache_rest=None, mode='remote')
 one = ONE(password='international')
 from datetime import timedelta
 from config import LFP_mode, LFP_dir, REST_cache_expirry_min
