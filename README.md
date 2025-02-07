@@ -1,4 +1,3 @@
-
 # Overview
 
 This project is dedicated to analyzing International Brain Laboratory (IBL) Electrophysiology datasets. It is Developed during my time at the Lyon Neuroscience Research Center (CRNL) under the supervision of Dr. Romain Ligneul (March 2024 - Dec 2024). The repository is actively evolving, with some analyses still under review by my supervisor.
@@ -29,17 +28,15 @@ Given the large-scale datasets, I focused on optimizing computations using clust
 
 # Repository Contents (From Latest to Older)
 
-
 -   [**Time_frequency_selectives**](./Time_frequency_selectives/)
 -   [**Decoding_spikes**](./Decoding_spikes/)
 -   [**extraction_data**](./extraction_data/)
--   [**Decoding on Time-Frequency Representations (TFR)**](./decoding_onTFR/)
--   [**Phase-Amplitude Coupling (PAC) Analysis**](./Phase_amplitude_coupling(PAC)/)
+-   [**Decoding on Time-Frequency Representations (TFR)**](./decoding_onTFR/) **(under development)**
+-   [**Phase-Amplitude Coupling (PAC) Analysis**](./Phase_amplitude_coupling(PAC)/) **( under development)**
 -   [**Behavioral Analysis**](./behavioral_analysis/)
 -   [**Receptive Field Mapping**](./Receptive_field_mapping/)
 
 You can find my Master thesis, defended in September 2024, in the [Writings folder](./Writings/)
-
 
 # Usage
 
@@ -73,7 +70,7 @@ You can find my Master thesis, defended in September 2024, in the [Writings fold
 
 5.  **Download LFP data (optional)**
 
-    If you wish to proceed the analysis by loading the LFP data from IBL server directly, in `config.py` file put `` LFP_mode = `download` ``.  The ONE instance will operate in remote mode without caching REST responses on disk By setting `cache_rest=None` and `mode='remote'` while initializing the ONE instance. See the [ONE documentation](https://int-brain-lab.github.io/ONE/notebooks/one_modes.html) for more information.
+    If you wish to proceed the analysis by loading the LFP data from IBL server directly, in `config.py` file put `` LFP_mode = `download` ``. The ONE instance will operate in remote mode without caching REST responses on disk By setting `cache_rest=None` and `mode='remote'` while initializing the ONE instance. See the [ONE documentation](https://int-brain-lab.github.io/ONE/notebooks/one_modes.html) for more information.
 
     Alternatively, you can Use the [`get_LFP_data.ipynb`](_analyses/extraction_data/get_LFP_data.ipynb) notebook in the [`extraction_data`](_analyses/extraction_data) module to download and save LFP data for your sessions of interest and then change teh `LFP_mode` to `load` in the `config.py` file. Then, you will load the LFP data from the saved files in further analyzis. Make sure the path to the saved LFP data is correct in the `config.py` file.
 
@@ -85,8 +82,7 @@ You can find my Master thesis, defended in September 2024, in the [Writings fold
     Use the [`submit_decoding.ipynb`](_analyses/Decoding_spikes/submit_decoding.ipynb) notebook in the [`Decoding_spikes`](_analyses/Decoding_spikes) module to find right/left selective channels.
 
 7.  **Compute time-frequency representations (TFRs)**\
-    Use [`Time_frequency_selectives`](_analyses/Time_frequency_selectives) module to compute TFRs for different conditions (e.g., comparing TFRs for left stimulus presentations with different probabilities on left-selective electrodes).
-    see example notebook: [`BiasBlocks_anticip_V1.ipynb`](_analyses/Time_frequency_selectives/BiasBlocks_anticip_V1.ipynb) 
+    Use [`Time_frequency_selectives`](_analyses/Time_frequency_selectives) module to compute TFRs for different conditions (e.g., comparing TFRs for left stimulus presentations with different probabilities on left-selective electrodes). see example notebook: [`BiasBlocks_anticip_V1.ipynb`](_analyses/Time_frequency_selectives/BiasBlocks_anticip_V1.ipynb)
 
 # Quarto
 
