@@ -1,56 +1,132 @@
-import re
 import matplotlib.pyplot as plt
-def plot_time_frequency_diff( diff, times, freqs, ch_names, BL_n_trials, BR_n_trials, side_selective , selected_regions, order):
-    layers = ['1', '2/3', '4', '5', '6a', '6b']
 
-    # Plot for each region by layer and channel
-    for region in selected_regions:
-        print(f"Processing region: {region}")
-        fig, axes_dict = {}, {}
-        
-        for layer in layers:
-            # Find channels for the specific region and layer
-            layer_pattern = rf'^{region}{layer}$'
-            keep_ch = [i for i, ch in enumerate(ch_names) if re.match(layer_pattern, ch)]
-            
-            if not keep_ch:  # Skip if no data for the layer
+def plot_all_tf_by_layers(tf_data_list, title, region_prefix='VISp'):
+    """
+    Plot all TF channels from multiple sessions arranged by layer.
+
+    The channels are grouped by layer (extracted from the channel's acronym by removing
+    the region prefix). The expected layer order is:
+        ["1", "2/3", "4", "5", "6a", "6b"]
+
+    If the maximum number of channels per layer is more than 5, each layer is plotted
+    in a separate figure with a maximum of 5 columns and any needed number of rows.
+    Layers with no channels are removed from the plot.
+
+    Parameters
+    ----------
+    tf_data_list : list of dict
+        List of TF dictionaries (one per channel).
+    title : str
+        The title for the plot(s).
+    region_prefix : str, optional
+        The prefix of the region in the channel acronym (default is "VISp").
+    """
+    # Define the expected layer order.
+    layer_order = ["1", "2/3", "4", "5", "6a", "6b"]
+
+    # Group the channels by layer.
+    layers_dict = {layer: [] for layer in layer_order}
+    for item in tf_data_list:
+        acro = item['acronym']
+        if acro.startswith(region_prefix):
+            # Extract the layer string; for example, "VISp2/3" -> "2/3"
+            layer = acro[len(region_prefix):].strip()
+            if layer in layers_dict:
+                layers_dict[layer].append(item)
+            else:
+                print(f"Warning: channel with acronym '{acro}' does not match expected layers.")
+        else:
+            print(f"Warning: channel acronym '{acro}' does not start with '{region_prefix}'.")
+
+    # Determine the maximum number of channels across layers
+    max_channels = max(len(ch_list) for ch_list in layers_dict.values())
+
+    # If max_channels > 5, plot each layer in a separate figure
+    if max_channels > 5:
+        for layer in layer_order:
+            channels = layers_dict[layer]
+            if not channels:
                 continue
-            
-            n_channels = len(keep_ch)
-            ncols = 4 if n_channels > 1 else 1
-            nrows = (n_channels + ncols - 1) // ncols  # Calculate required rows
-            
-            # Create a figure for each layer
-            fig[layer], axes_dict[layer] = plt.subplots(
-                nrows=nrows,
-                ncols=ncols,
-                figsize=(5 * ncols, 5 * nrows),
-                squeeze=False,
-            )
-            # fig[layer].suptitle(f' {region} : Left - Right Blocks for {side_selective} selective', fontsize=16)
-            
-            for i, ch_idx in enumerate(keep_ch):
-                row, col = divmod(i, ncols)
-                ax = axes_dict[layer][row, col]
-                im = ax.imshow(
-                    diff[ch_idx, :, :],  # Use the individual channel's data
-                    aspect='auto',
-                    extent=[times[0], times[-1], freqs[0], freqs[-1]],
-                    origin='lower',
-                    cmap='RdBu_r',
-                )
-                if order == 'Left-Right':
-                    ax.set_title(f'L{layer}, nTrials ( {BL_n_trials[ch_idx]} -{BR_n_trials[ch_idx]})', fontsize=12)
-                elif order == 'Right-Left':
-                    ax.set_title(f'L{layer}, nTrials ({BR_n_trials[ch_idx]} - {BL_n_trials[ch_idx]})', fontsize=12)
-                ax.set_xlabel('Time (s)')
-                ax.set_ylabel('Frequency (Hz)')
-                fig[layer].colorbar(im, ax=ax, orientation='vertical', label='Power Difference')
-            
-            # Hide any empty subplots
-            for idx in range(n_channels, nrows * ncols):
-                row, col = divmod(idx, ncols)
-                fig[layer].delaxes(axes_dict[layer][row, col])
-            
-            plt.tight_layout(rect=[0, 0.03, 1, 0.95])  # Adjust layout
+
+            # Calculate the number of rows needed for this layer
+            n_rows = (len(channels) + 4) // 5  # Ceiling division to ensure all channels fit
+            n_cols = 5
+
+            # Create a new figure for this layer
+            fig, axes = plt.subplots(n_rows, n_cols, figsize=(4 * n_cols, 3 * n_rows), squeeze=False)
+            fig.suptitle(f"{title} - Layer {layer}")
+
+            # Plot each channel in the layer
+            for i, item in enumerate(channels):
+                row = i // n_cols
+                col = i % n_cols
+                ax = axes[row, col]
+
+                tf_data = item['TF']         # shape: (n_freqs, n_times)
+                times = item['times']
+                freqs = item['freqs']
+                accuracy_right = item['accuracy_right']
+                accuracy_left = item['accuracy_left']
+                pvalue_right = item['pvalue_right']
+                pvalue_left = item['pvalue_left']
+                acro = item['acronym']
+                pid = item['pid']
+
+                # Plot the TF data.
+                cax = ax.pcolormesh(times, freqs, tf_data, shading='auto', cmap='RdBu_r')
+                # Optionally, add a colorbar for each subplot.
+                fig.colorbar(cax, ax=ax)
+                ax.set_xlabel("Time (s)")
+                ax.set_ylabel("Frequency (Hz)")
+                ax.set_title(f"{acro}\nAcc_R: {accuracy_right:.2f}, pVal_R: {pvalue_right:.3f},\n Acc_L: {accuracy_left:.2f}, pVal_L: {pvalue_left:.3f}")
+
+            # Hide any extra subplots in this figure
+            for i in range(len(channels), n_rows * n_cols):
+                row = i // n_cols
+                col = i % n_cols
+                axes[row, col].axis('off')
+
+            plt.tight_layout()
             plt.show()
+
+    else:
+        # If max_channels <= 5, plot all layers in one figure
+        # Filter out layers with no channels
+        layers_with_channels = {layer: channels for layer, channels in layers_dict.items() if channels}
+        filtered_layer_order = [layer for layer in layer_order if layer in layers_with_channels]
+
+        n_layers = len(filtered_layer_order)
+        fig, axes = plt.subplots(n_layers, max_channels, figsize=(4 * max_channels, 3 * n_layers), squeeze=False)
+        fig.suptitle(title)
+
+        # Loop over layers (rows)
+        for i, layer in enumerate(filtered_layer_order):
+            channels = layers_with_channels[layer]
+            # For each column in the current row:
+            for j in range(max_channels):
+                ax = axes[i, j]
+                if j < len(channels):
+                    item = channels[j]
+                    tf_data = item['TF']         # shape: (n_freqs, n_times)
+                    times = item['times']
+                    freqs = item['freqs']
+                    accuracy_right = item['accuracy_right']
+                    accuracy_left = item['accuracy_left']
+                    pvalue_right = item['pvalue_right']
+                    pvalue_left = item['pvalue_left']
+                    acro = item['acronym']
+                    pid = item['pid']
+
+                    # Plot the TF data.
+                    cax = ax.pcolormesh(times, freqs, tf_data, shading='auto', cmap='RdBu_r')
+                    # Optionally, add a colorbar for each subplot.
+                    fig.colorbar(cax, ax=ax)
+                    ax.set_xlabel("Time (s)")
+                    ax.set_ylabel("Frequency (Hz)")
+                    ax.set_title(f"{acro}\nAcc_R: {accuracy_right:.2f}, pVal_R: {pvalue_right:.3f},\n Acc_L: {accuracy_left:.2f}, pVal_L: {pvalue_left:.3f}")
+                else:
+                    # Hide any extra subplots in this row.
+                    ax.axis('off')
+
+        plt.tight_layout()
+        plt.show()
