@@ -88,11 +88,11 @@ You can find my Master thesis, defended in September 2024, in the [Writings fold
     Use [`Time_frequency_selectives`](_analyses/Time_frequency_selectives) module to compute TFRs for different conditions (e.g., comparing TFRs for left stimulus presentations with different probabilities on left-selective electrodes).
     see example notebook: [`BiasBlocks_anticip_V1.ipynb`](_analyses/Time_frequency_selectives/BiasBlocks_anticip_V1.ipynb) 
 
-## Quarto
+# Quarto
 
 Refer to the [documentation](https://cophyteam.github.io/project-template/about.html) of the Cophy project template to use Quarto. For convenience, the conda environments for Quarto are provided as .ylm files in \_functions/envs.
 
-## Notes
+# Notes
 
 -   To prevent duplicate files, ensure that if you update the save path on the server, you also relocate any existing files.
 
