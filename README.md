@@ -84,13 +84,14 @@ You can find my Master thesis, defended in September 2024, in the [Writings fold
     Use the [`submit_decoding.ipynb`](_analyses/Decoding_spikes/submit_decoding.ipynb) notebook in the [`Decoding_spikes`](_analyses/Decoding_spikes) module to find right/left selective channels.
 
 7.  **Compute time-frequency representations (TFRs)**\
-    Use the [`submit_TFR_computation.ipynb`](_analyses/Time_frequency_selectives/submit_TFR_computation.ipynb) notebook in the [`Time_frequency_selectives`](_analyses/Time_frequency_selectives) module to compute TFRs for different conditions (e.g., comparing TFRs for left stimulus presentations with different probabilities on left-selective electrodes).
+    Use [`Time_frequency_selectives`](_analyses/Time_frequency_selectives) module to compute TFRs for different conditions (e.g., comparing TFRs for left stimulus presentations with different probabilities on left-selective electrodes).
+    see example notebook: [`BiasBlocks_anticip_V1.ipynb`](_analyses/Time_frequency_selectives/BiasBlocks_anticip_V1.ipynb) 
 
 ## Quarto
 
 Refer to the [documentation](https://cophyteam.github.io/project-template/about.html) of the Cophy project template to use Quarto. For convenience, the conda environments for Quarto are provided as .ylm files in \_functions/envs.
 
-# Notes
+## Notes
 
 -   To prevent duplicate files, ensure that if you update the save path on the server, you also relocate any existing files.
 
