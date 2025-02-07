@@ -29,13 +29,14 @@ Given the large-scale datasets, I focused on optimizing computations using clust
 
 # Repository Contents (From Latest to Older)
 
--   [**Decoding_spikes**](./Decoding_spikes/)
--   [**Decoding on Time-Frequency Representations (TFR)**](./decoding_onTFR/)
--   [**Receptive Field Mapping**](./Receptive_field_mapping/)
+
 -   [**Time_frequency_selectives**](./Time_frequency_selectives/)
+-   [**Decoding_spikes**](./Decoding_spikes/)
 -   [**extraction_data**](./extraction_data/)
+-   [**Decoding on Time-Frequency Representations (TFR)**](./decoding_onTFR/)
 -   [**Phase-Amplitude Coupling (PAC) Analysis**](./Phase_amplitude_coupling(PAC)/)
 -   [**Behavioral Analysis**](./behavioral_analysis/)
+-   [**Receptive Field Mapping**](./Receptive_field_mapping/)
 
 You can find my Master thesis, defended in September 2024, in the [Writings folder](./Writings/)
 
